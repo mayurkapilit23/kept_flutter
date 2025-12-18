@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:kept_flutter/features/promise/view/home_screen.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:kept_flutter/features/auth/view/mobile_input_screen.dart';
 
 void main() {
+  WidgetsFlutterBinding.ensureInitialized();
   runApp(const MyApp());
 }
 
@@ -12,8 +14,11 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Kept',
-    home:HomeScreen()
+      debugShowCheckedModeBanner: false,
+      theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
+      // theme: ThemeData(fontFamily: 'Inter'),
+      home: MobileInputScreen(),
+      // home: HomeScreen(),
     );
   }
 }
-
