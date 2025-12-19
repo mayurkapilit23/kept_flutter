@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:kept_flutter/features/auth/view/mobile_input_screen.dart';
+
+import 'features/promise/view/home_screen.dart';
 
 void main() {
   WidgetsFlutterBinding.ensureInitialized();
@@ -17,8 +18,8 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
       // theme: ThemeData(fontFamily: 'Inter'),
-      home: MobileInputScreen(),
-      // home: HomeScreen(),
+      // home: MobileInputScreen(),
+      home: HomeScreen(),
     );
   }
 }

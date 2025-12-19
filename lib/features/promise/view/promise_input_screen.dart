@@ -38,6 +38,11 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
     return Scaffold(
       backgroundColor: AppColors.lightPrimary,
       // resizeToAvoidBottomInset: true,
+      appBar: AppBar(
+        surfaceTintColor: Colors.transparent,
+        backgroundColor: AppColors.lightPrimary,
+        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.sunny))],
+      ),
       body: SafeArea(
         child: LayoutBuilder(
           builder: (context, constraints) {
@@ -95,7 +100,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                               Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (_) => const SelectPersonScreen(),
+                                  builder: (_) => SelectPersonScreen(),
                                 ),
                               );
                             },

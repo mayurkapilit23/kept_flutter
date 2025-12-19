@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 import '../../../core/colors/app_colors.dart';
 import '../widgets/custom_button.dart';
 
-class PromiseDetailsScreen extends StatelessWidget {
-  const PromiseDetailsScreen({super.key});
+class PromisePreviewScreen extends StatelessWidget {
+  const PromisePreviewScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -15,7 +15,8 @@ class PromiseDetailsScreen extends StatelessWidget {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          // crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Container(
               width: double.infinity,
@@ -35,16 +36,27 @@ class PromiseDetailsScreen extends StatelessWidget {
                     'Today · 6:00 PM',
                     style: TextStyle(color: Colors.grey),
                   ),
+                  SizedBox(height: 50),
+
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      AppPrimaryButton(
+                        title: 'Mark as Done',
+                        height: ButtonHeight.medium,
+                        width: ButtonWidth.auto,
+                        onPressed: () {},
+                      ),
+                      AppPrimaryButton(
+                        title: 'Mark as Done',
+                        height: ButtonHeight.medium,
+                        width: ButtonWidth.auto,
+                        onPressed: () {},
+                      ),
+                    ],
+                  ),
                 ],
               ),
-            ),
-            const Spacer(),
-
-            AppPrimaryButton(
-              title: 'Mark as Done',
-              height: ButtonHeight.medium,
-              width: ButtonWidth.full,
-              onPressed: () {},
             ),
           ],
         ),

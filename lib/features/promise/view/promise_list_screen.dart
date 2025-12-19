@@ -18,6 +18,8 @@ class _PromiseListScreenState extends State<PromiseListScreen> {
       backgroundColor: AppColors.lightPrimary,
 
       appBar: AppBar(
+        automaticallyImplyLeading: false,
+
         backgroundColor: AppColors.lightPrimary,
 
         title: const Text('Promises'),
