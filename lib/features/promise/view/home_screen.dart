@@ -31,10 +31,10 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: context.isDark? AppColors.darkPrimary:AppColors.lightPrimary,
-
+      backgroundColor: context.isDark
+          ? AppColors.darkPrimary
+          : AppColors.lightPrimary,
       body: IndexedStack(index: _currentIndex, children: _screens),
-
       bottomNavigationBar: SafeArea(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
@@ -42,7 +42,9 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 64,
             width: MediaQuery.of(context).size.width * 0.50,
             decoration: BoxDecoration(
-              color: context.isDark?AppColors.darkSecondary:AppColors.lightSecondary,
+              color: context.isDark
+                  ? AppColors.darkSecondary
+                  : AppColors.lightSecondary,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(

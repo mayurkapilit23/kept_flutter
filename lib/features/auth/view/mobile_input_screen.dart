@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/auth/view/otp_verification_screen.dart';
 
 import '../../../core/colors/app_colors.dart';
@@ -18,9 +19,8 @@ class _MobileInputScreenState extends State<MobileInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: isDark? AppColors.darkSecondary:AppColors.lightPrimary,
+      backgroundColor: context.isDark? AppColors.darkSecondary:AppColors.lightPrimary,
       body: SafeArea(
         child: Center(
           child: Form(
@@ -38,9 +38,9 @@ class _MobileInputScreenState extends State<MobileInputScreen> {
                   Text(
                     "Enter Mobile Number",
                     style: TextStyle(
-                      // color: isDark
-                      //     ? AppColors.whiteColor
-                      //     : AppColors.darkPrimary,
+                      color: context.isDark
+                          ? Colors.white
+                          : Colors.black,
                       fontSize: 22,
                       fontWeight: FontWeight.w600,
                     ),
@@ -63,7 +63,7 @@ class _MobileInputScreenState extends State<MobileInputScreen> {
                       focusedBorder: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(12),
                         borderSide: BorderSide(
-                          color: isDark
+                          color: context.isDark
                               ? Colors.white
                               : Colors.black, // 👈 focus border color
                           width: 1.2,
@@ -72,7 +72,7 @@ class _MobileInputScreenState extends State<MobileInputScreen> {
                       counterText: "",
                       labelText: "Mobile Number",
                       labelStyle: TextStyle(
-                        color: isDark ? Colors.white : Colors.black,
+                        color: context.isDark ? Colors.white : Colors.black,
                       ),
                       prefixText: "+91 ",
                       border: OutlineInputBorder(

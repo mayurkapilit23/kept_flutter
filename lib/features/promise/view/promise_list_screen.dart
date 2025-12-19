@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/promise_details_screen.dart';
 
@@ -37,10 +38,12 @@ class _PromiseListScreenState extends State<PromiseListScreen> {
             title: 'Send ₹5,000',
             subtitle: 'Ramesh · Today 6:00 PM',
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => PromiseDetailsScreen()),
-              );
+              // Navigator.push(
+              //   context,
+              //   MaterialPageRoute(builder: (context) => PromiseDetailsScreen()),
+              // );
+
+              Navigator.push(context, AppRoute.smooth(PromiseDetailsScreen()));
             },
           ),
           PromiseCard(

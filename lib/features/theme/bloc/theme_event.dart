@@ -11,7 +11,9 @@ class LoadTheme extends ThemeEvent {
 
 class ToggleTheme extends ThemeEvent {
   final AppTheme theme;
+
   ToggleTheme(this.theme);
+
   @override
   List<Object?> get props => [theme];
 }

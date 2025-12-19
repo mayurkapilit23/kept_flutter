@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kept_flutter/core/colors/app_colors.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/home_screen.dart';
 import 'package:pinput/pinput.dart';
 
@@ -18,10 +19,11 @@ class _OtpVerificationSheetState extends State<OtpVerificationSheet> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      // resizeToAvoidBottomInset: false,
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: context.isDark
+          ? AppColors.darkSecondary
+          : AppColors.lightPrimary,
+
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
@@ -33,9 +35,7 @@ class _OtpVerificationSheetState extends State<OtpVerificationSheet> {
                   "Verify OTP",
                   style: TextStyle(
                     fontSize: 22,
-                    // color: isDark
-                    //     ? AppColors.whiteColor
-                    //     : AppColors.darkPrimary,
+                    color: context.isDark ? Colors.white : Colors.black,
                     fontWeight: FontWeight.w600,
                   ),
                 ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:kept_flutter/core/colors/app_colors.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 class CustomSearchBar extends StatefulWidget {
   final TextEditingController controller;
@@ -34,7 +35,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return Focus(
       onFocusChange: (focus) => setState(() => _focused = focus),
@@ -42,16 +43,20 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         duration: const Duration(milliseconds: 150),
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
         decoration: BoxDecoration(
-          color: isDark ? const Color(0xFF09090B) : AppColors.lightPrimary,
+          color: context.isDark
+              ? AppColors.darkSecondary
+              : AppColors.lightPrimary,
 
           borderRadius: BorderRadius.circular(10),
           border: Border.all(
             color: _focused
-                ? AppColors
-                      .darkPrimary // indigo focus
-                : isDark
-                ? const Color(0xFF27272A)
-                : const Color(0xFFE4E4E7),
+                ? context.isDark
+                      ? AppColors.lightPrimary
+                      : AppColors.darkSecondary
+                : context.isDark
+                ? Colors.grey
+                : Colors.grey,
+
             width: 1,
           ),
         ),
@@ -64,13 +69,13 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           onChanged: widget.onChanged,
           style: TextStyle(
             fontSize: 14,
-            color: isDark ? Colors.white : Colors.black,
+            color: context.isDark ? Colors.white : Colors.black,
           ),
           decoration: InputDecoration(
             border: InputBorder.none,
             hintText: widget.hintText,
             hintStyle: TextStyle(
-              color: isDark
+              color: context.isDark
                   ? Colors.white.withOpacity(0.4)
                   : Colors.black.withOpacity(0.4),
             ),

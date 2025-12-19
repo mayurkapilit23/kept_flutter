@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
@@ -60,13 +61,17 @@ class PromisePreviewScreen extends StatelessWidget {
                         title: 'Mark as Done',
                         height: ButtonHeight.medium,
                         width: ButtonWidth.auto,
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                        },
                       ),
                       AppPrimaryButton(
-                        title: 'Mark as Done',
+                        title: 'Set Reminder',
                         height: ButtonHeight.medium,
                         width: ButtonWidth.auto,
-                        onPressed: () {},
+                        onPressed: () {
+                          HapticFeedback.lightImpact();
+                        },
                       ),
                     ],
                   ),

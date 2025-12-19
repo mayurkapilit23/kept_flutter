@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/contact.dart';
+import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/select_person_screen.dart';
 import 'package:kept_flutter/features/promise/widgets/custom_button.dart';
@@ -20,6 +23,7 @@ class PromiseInputScreen extends StatefulWidget {
 class _PromiseInputScreenState extends State<PromiseInputScreen> {
   final controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  List<Contact> contacts = [];
 
   @override
   void initState() {
@@ -57,6 +61,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
             child: IconButton(
               key: ValueKey(context.watch<ThemeBloc>().state.theme),
               onPressed: () {
+                HapticFeedback.selectionClick();
                 final isDark =
                     context.read<ThemeBloc>().state.theme == AppTheme.dark;
 
@@ -95,7 +100,6 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                             height: constraints.maxHeight * 0.50,
                           ),
                         ),
-
                         const SizedBox(height: 24),
 
                         // Input
@@ -106,13 +110,15 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                           decoration: InputDecoration(
                             hintText: 'What did you promise?',
                             hintStyle: TextStyle(
-                              color: context.isDark
-                                  ? Colors.white
-                                  : Colors.black,
+                              fontWeight: FontWeight.normal,
+                              color: context.isDark ? Colors.grey : Colors.grey,
                             ),
                             border: InputBorder.none,
                           ),
-                          style: const TextStyle(fontSize: 26),
+                          style: const TextStyle(
+                            fontSize: 26,
+                            fontWeight: FontWeight.w900,
+                          ),
                         ),
 
                         const SizedBox(height: 16),
@@ -131,12 +137,17 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                             title: 'Next',
                             height: ButtonHeight.medium,
                             width: ButtonWidth.fixed,
-                            onPressed: () {
+                            onPressed: () async {
+                              // Navigator.push(
+                              //   context,
+                              //   MaterialPageRoute(
+                              //     builder: (_) => SelectPersonScreen(),
+                              //   ),
+                              // );
+
                               Navigator.push(
                                 context,
-                                MaterialPageRoute(
-                                  builder: (_) => SelectPersonScreen(),
-                                ),
+                                AppRoute.smooth(SelectPersonScreen()),
                               );
                             },
                           ),
