@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
 
@@ -21,7 +22,9 @@ class PromiseCard extends StatelessWidget {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       child: Material(
-        color: AppColors.whiteColor,
+        color: context.isDark
+            ? AppColors.darkSecondary
+            : AppColors.lightSecondary,
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
@@ -38,9 +41,10 @@ class PromiseCard extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: const TextStyle(
+                        style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.w600,
+                          color: context.isDark ? Colors.white : Colors.black,
                         ),
                       ),
                       const SizedBox(height: 4),

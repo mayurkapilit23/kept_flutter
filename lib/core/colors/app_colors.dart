@@ -3,8 +3,7 @@ import 'dart:ui';
 class AppColors {
   //LightMode Colors
   static const Color lightPrimary = Color(0xfff3f3f2);
-  static const Color whiteColor = Color(0xffffffff);
-  static const Color userBubbleColor = Color(0xffe1e0df);
+  static const Color lightSecondary = Color(0xffffffff);
 
   //DarkMode Colors
   static const Color darkPrimary = Color(0xff111111);

@@ -20,7 +20,7 @@ class _MobileInputScreenState extends State<MobileInputScreen> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: isDark? AppColors.darkSecondary:AppColors.lightPrimary,
       body: SafeArea(
         child: Center(
           child: Form(

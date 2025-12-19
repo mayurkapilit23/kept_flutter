@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/select_person_screen.dart';
 import 'package:kept_flutter/features/promise/widgets/custom_button.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../../core/colors/app_colors.dart';
+import '../../theme/bloc/theme_bloc.dart';
+import '../../theme/bloc/theme_event.dart';
+import '../../theme/data/repositories/theme_repository.dart';
 
 class PromiseInputScreen extends StatefulWidget {
   const PromiseInputScreen({super.key});
@@ -20,7 +25,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
   void initState() {
     super.initState();
 
-    // 👇 Delay focus until UI is built
+    // Delay focus until UI is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _focusNode.requestFocus();
     });
@@ -35,13 +40,38 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    // final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
-      // resizeToAvoidBottomInset: true,
+      backgroundColor: context.isDark
+          ? AppColors.darkPrimary
+          : AppColors.lightPrimary,
       appBar: AppBar(
         surfaceTintColor: Colors.transparent,
-        backgroundColor: AppColors.lightPrimary,
-        actions: [IconButton(onPressed: () {}, icon: Icon(Icons.sunny))],
+        backgroundColor: context.isDark
+            ? AppColors.darkPrimary
+            : AppColors.lightPrimary,
+        actions: [
+          AnimatedSwitcher(
+            duration: const Duration(milliseconds: 200),
+            child: IconButton(
+              key: ValueKey(context.watch<ThemeBloc>().state.theme),
+              onPressed: () {
+                final isDark =
+                    context.read<ThemeBloc>().state.theme == AppTheme.dark;
+
+                context.read<ThemeBloc>().add(
+                  ToggleTheme(isDark ? AppTheme.light : AppTheme.dark),
+                );
+              },
+              icon: Icon(
+                context.watch<ThemeBloc>().state.theme == AppTheme.dark
+                    ? Icons.light_mode
+                    : Icons.dark_mode,
+              ),
+            ),
+          ),
+        ],
       ),
       body: SafeArea(
         child: LayoutBuilder(
@@ -73,8 +103,13 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                           controller: controller,
                           // autofocus: true,
                           focusNode: _focusNode,
-                          decoration: const InputDecoration(
+                          decoration: InputDecoration(
                             hintText: 'What did you promise?',
+                            hintStyle: TextStyle(
+                              color: context.isDark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
                             border: InputBorder.none,
                           ),
                           style: const TextStyle(fontSize: 26),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
 
@@ -8,7 +9,8 @@ class NavItem extends StatelessWidget {
   final int currentIndex;
   final ValueChanged<int> onTap;
 
-  const NavItem({super.key,
+  const NavItem({
+    super.key,
     required this.icon,
     required this.index,
     required this.currentIndex,
@@ -25,7 +27,11 @@ class NavItem extends StatelessWidget {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.all(12),
         decoration: BoxDecoration(
-          color: isSelected
+          color: context.isDark
+              ? isSelected
+                    ? AppColors.lightPrimary.withOpacity(0.15)
+                    : Colors.transparent
+              : isSelected
               ? AppColors.darkSecondary.withOpacity(0.15)
               : Colors.transparent,
           shape: BoxShape.circle,
@@ -33,7 +39,13 @@ class NavItem extends StatelessWidget {
         child: Icon(
           icon,
           size: 26,
-          color: isSelected ? AppColors.darkPrimary : Colors.grey,
+          color: context.isDark
+              ? isSelected
+                    ? AppColors.lightSecondary
+                    : Colors.grey
+              : isSelected
+              ? AppColors.darkPrimary
+              : Colors.grey,
         ),
       ),
     );

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/promise_input_screen.dart';
 import 'package:kept_flutter/features/promise/view/promise_list_screen.dart';
 
@@ -30,7 +31,7 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: context.isDark? AppColors.darkPrimary:AppColors.lightPrimary,
 
       body: IndexedStack(index: _currentIndex, children: _screens),
 
@@ -41,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
             height: 64,
             width: MediaQuery.of(context).size.width * 0.50,
             decoration: BoxDecoration(
-              color: Colors.white,
+              color: context.isDark?AppColors.darkSecondary:AppColors.lightSecondary,
               borderRadius: BorderRadius.circular(10),
               boxShadow: [
                 BoxShadow(

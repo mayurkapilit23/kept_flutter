@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
 import '../widgets/custom_button.dart';
@@ -9,9 +10,15 @@ class PromisePreviewScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: context.isDark
+          ? AppColors.darkPrimary
+          : AppColors.lightPrimary,
 
-      appBar: AppBar(backgroundColor: AppColors.lightPrimary),
+      appBar: AppBar(
+        backgroundColor: context.isDark
+            ? AppColors.darkPrimary
+            : AppColors.lightPrimary,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -23,13 +30,21 @@ class PromisePreviewScreen extends StatelessWidget {
               padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: AppColors.whiteColor,
+                color: context.isDark
+                    ? AppColors.darkSecondary
+                    : AppColors.lightSecondary,
               ),
 
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Send ₹5,000', style: TextStyle(fontSize: 28)),
+                  Text(
+                    'Send ₹5,000',
+                    style: TextStyle(
+                      fontSize: 28,
+                      color: context.isDark ? Colors.white : Colors.black,
+                    ),
+                  ),
                   const SizedBox(height: 12),
                   const Text('To Ramesh'),
                   const Text(

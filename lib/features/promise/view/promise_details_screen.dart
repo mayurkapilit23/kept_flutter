@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
 import '../widgets/custom_button.dart';
@@ -9,9 +10,15 @@ class PromiseDetailsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: context.isDark
+          ? AppColors.darkPrimary
+          : AppColors.lightPrimary,
 
-      appBar: AppBar(backgroundColor: AppColors.lightPrimary),
+      appBar: AppBar(
+        backgroundColor: context.isDark
+            ? AppColors.darkPrimary
+            : AppColors.lightPrimary,
+      ),
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: Column(
@@ -22,7 +29,9 @@ class PromiseDetailsScreen extends StatelessWidget {
               padding: EdgeInsets.all(15),
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12),
-                color: AppColors.whiteColor,
+                color: context.isDark
+                    ? AppColors.darkSecondary
+                    : AppColors.lightSecondary,
               ),
 
               child: Column(

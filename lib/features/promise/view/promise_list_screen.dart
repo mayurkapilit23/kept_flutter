@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/promise_details_screen.dart';
 
 import '../../../core/colors/app_colors.dart';
@@ -15,12 +16,16 @@ class _PromiseListScreenState extends State<PromiseListScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: context.isDark
+          ? AppColors.darkPrimary
+          : AppColors.lightPrimary,
 
       appBar: AppBar(
         automaticallyImplyLeading: false,
 
-        backgroundColor: AppColors.lightPrimary,
+        backgroundColor: context.isDark
+            ? AppColors.darkPrimary
+            : AppColors.lightPrimary,
 
         title: const Text('Promises'),
       ),

@@ -1,11 +1,28 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kept_flutter/core/utils/app_dark_theme.dart';
+import 'package:kept_flutter/core/utils/app_light_theme.dart';
+import 'package:kept_flutter/features/theme/bloc/theme_bloc.dart';
+import 'package:kept_flutter/features/theme/bloc/theme_state.dart';
 
 import 'features/promise/view/home_screen.dart';
+import 'features/theme/data/repositories/theme_repository.dart';
 
-void main() {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  runApp(const MyApp());
+  final themeRepository = ThemeRepository();
+  //to load first theme
+  final initialTheme = await themeRepository.getTheme();
+  runApp(
+    MultiBlocProvider(
+      providers: [
+        BlocProvider<ThemeBloc>(
+          create: (_) => ThemeBloc(themeRepository, initialTheme),
+        ),
+      ],
+      child: const MyApp(),
+    ),
+  );
 }
 
 class MyApp extends StatelessWidget {
@@ -13,13 +30,26 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Kept',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(fontFamily: GoogleFonts.poppins().fontFamily),
-      // theme: ThemeData(fontFamily: 'Inter'),
-      // home: MobileInputScreen(),
-      home: HomeScreen(),
+    return BlocBuilder<ThemeBloc, ThemeState>(
+      builder: (context, state) {
+        return MaterialApp(
+          title: 'Kept',
+          theme: AppLightTheme.theme,
+          darkTheme: AppDarkTheme.theme,
+          themeMode: _mapThemeMode(state.theme),
+          debugShowCheckedModeBanner: false,
+          home: HomeScreen(),
+        );
+      },
     );
+  }
+
+  ThemeMode _mapThemeMode(AppTheme theme) {
+    switch (theme) {
+      case AppTheme.light:
+        return ThemeMode.light;
+      case AppTheme.dark:
+        return ThemeMode.dark;
+    }
   }
 }

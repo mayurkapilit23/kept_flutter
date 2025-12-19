@@ -1,23 +1,31 @@
+import 'dart:core';
+
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/data/repositories/get_contacts.dart';
-import 'package:kept_flutter/features/promise/view/promise_details_screen.dart';
 import 'package:kept_flutter/features/promise/view/promise_preview_screen.dart';
 
 import '../../../core/colors/app_colors.dart';
-import '../widgets/custom_search_bar.dart';
 
-class SelectPersonScreen extends StatelessWidget {
-  SelectPersonScreen({super.key});
+class SelectPersonScreen extends StatefulWidget {
+  const SelectPersonScreen({super.key});
 
+  @override
+  State<SelectPersonScreen> createState() => _SelectPersonScreenState();
+}
+
+class _SelectPersonScreenState extends State<SelectPersonScreen> {
   final controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppColors.lightPrimary,
+      backgroundColor: context.isDark? AppColors.darkPrimary:AppColors.lightPrimary,
+
 
       appBar: AppBar(
-        backgroundColor: AppColors.lightPrimary,
+        backgroundColor: context.isDark? AppColors.darkPrimary:AppColors.lightPrimary,
+
         title: const Text('Select Person'),
       ),
       body: Padding(
@@ -43,7 +51,9 @@ class SelectPersonScreen extends StatelessWidget {
                 borderRadius: BorderRadius.circular(12),
                 // side: const BorderSide(color: Colors.grey),
               ),
-              tileColor: AppColors.whiteColor,
+              tileColor: context.isDark
+                  ? AppColors.darkSecondary
+                  : AppColors.lightSecondary,
               title: const Text(
                 'Pick from contacts',
                 style: TextStyle(fontSize: 15),
@@ -66,6 +76,15 @@ Future<void> showContactsBottomSheet(
   List contacts,
   TextEditingController controller,
 ) {
+  List<String>? resultQuery = [];
+
+  List searchContact(String query) {
+    return resultQuery = contacts
+        .where((item) => item.toLowerCase().contains(query.toLowerCase()))
+        .cast<String>()
+        .toList();
+  }
+
   return showModalBottomSheet(
     context: context,
     isScrollControlled: true,
@@ -76,15 +95,15 @@ Future<void> showContactsBottomSheet(
     builder: (context) {
       return DraggableScrollableSheet(
         initialChildSize: 0.9,
-        // 👈 opens half
+        //  opens half
         minChildSize: 0.4,
         maxChildSize: 0.95,
         expand: false,
         builder: (context, scrollController) {
           return Container(
             padding: const EdgeInsets.all(16),
-            decoration: const BoxDecoration(
-              color: AppColors.lightPrimary,
+            decoration:  BoxDecoration(
+              color: context.isDark? AppColors.darkSecondary:AppColors.lightPrimary,
               borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
             ),
             child: Column(
@@ -100,10 +119,16 @@ Future<void> showContactsBottomSheet(
                   ),
                 ),
 
-                CustomSearchBar(
-                  controller: controller,
-                  hintText: "Search Contacts",
-                  autofocus: true,
+                // CustomSearchBar(
+                //   controller: controller,
+                //   hintText: "Search Contacts",
+                //   autofocus: true,
+                // ),
+                TextField(
+                  onChanged: (query) {
+                    print("search => $query");
+                    searchContact(query);
+                  },
                 ),
 
                 const SizedBox(height: 20),
@@ -117,7 +142,9 @@ Future<void> showContactsBottomSheet(
 
                       return Container(
                         decoration: BoxDecoration(
-                          color: AppColors.whiteColor,
+                          color:context.isDark
+                              ? AppColors.darkPrimary
+                              : AppColors.lightSecondary,
                           borderRadius: BorderRadius.circular(12),
                         ),
                         margin: EdgeInsets.only(bottom: 5),
