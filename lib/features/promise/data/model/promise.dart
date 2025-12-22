@@ -1,24 +1,48 @@
 class Promise {
-  String? text;
-  String? toPhone;
-  String? toName;
-  String? dueAt;
+  final String id;
+  final String text;
+  final String toName;
+  final String toPhone;
+  final DateTime createdAt;
+  final DateTime dueAt;
 
-  Promise({this.text, this.toPhone, this.toName, this.dueAt});
+  final bool isDone;
 
-  Promise.fromJson(Map<String, dynamic> json) {
-    text = json['text'];
-    toPhone = json['toPhone'];
-    toName = json['toName'];
-    dueAt = json['dueAt'];
+  Promise({
+    required this.id,
+    required this.text,
+    required this.toName,
+    required this.toPhone,
+    required this.createdAt,
+    required this.dueAt,
+    required this.isDone,
+  });
+  Promise copyWith({
+    String? text,
+    String? toName,
+    String? toPhone,
+    DateTime? dueAt,
+    bool? isDone,
+  }) {
+    return Promise(
+      id: id,
+      text: text ?? this.text,
+      toName: toName ?? this.toName,
+      toPhone: toPhone ?? this.toPhone,
+      createdAt: createdAt,
+      dueAt: dueAt ?? this.dueAt,
+      isDone: isDone ?? this.isDone,
+    );
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['text'] = text;
-    data['toPhone'] = toPhone;
-    data['toName'] = toName;
-    data['dueAt'] = dueAt;
-    return data;
+  factory Promise.fromJson(Map<String, dynamic> json) {
+    return Promise(
+      id: json['id'],
+      text: json['text'],
+      toName: json['toName'],
+      toPhone: json['toPhone'],
+      createdAt: DateTime.parse(json['createdAt']),
+      dueAt: DateTime.parse(json['dueAt']),
+      isDone: json['isDone'],
+    );
   }
 }

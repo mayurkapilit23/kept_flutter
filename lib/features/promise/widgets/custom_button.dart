@@ -10,14 +10,14 @@ enum ButtonWidth {
   fixed, // percentage based
 }
 
-class AppPrimaryButton extends StatelessWidget {
+class CustomButton extends StatelessWidget {
   final String title;
   final VoidCallback? onPressed;
   final ButtonHeight height;
   final ButtonWidth width;
   final bool isLoading;
 
-  const AppPrimaryButton({
+  const CustomButton({
     super.key,
     required this.title,
     this.onPressed,

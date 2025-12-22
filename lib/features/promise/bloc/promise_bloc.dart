@@ -1,7 +1,9 @@
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
+import 'package:uuid/uuid.dart';
 
+import '../data/model/promise.dart';
 import '../data/repositories/get_contacts.dart';
 import '../data/repositories/promise_repository.dart';
 
@@ -12,6 +14,8 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     on<CheckPreviousLoad>(_checkPreviousLoad);
     on<LoadContacts>(_loadContacts);
     on<SearchContacts>(_searchContacts);
+    on<SetPromiseText>(_onPromiseText);
+    on<SetPerson>(_setPerson);
   }
 
   void _checkPreviousLoad(
@@ -31,15 +35,29 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     try {
       final contacts = await getContacts();
       await storage.setContactsLoaded(true);
-      emit(PromiseLoaded(contacts: contacts, filteredContacts: contacts));
+      emit(
+        PromiseLoaded(
+          contacts: contacts,
+          filteredContacts: contacts,
+          promise: Promise(
+            id: const Uuid().v4(),
+            text: '',
+            toName: '',
+            toPhone: '',
+            createdAt: DateTime.now(),
+            dueAt: DateTime.now(),
+            isDone: false,
+          ),
+        ),
+      );
     } catch (e) {
-      emit(PromiseError(e.toString()));
+      emit(PromiseError(message: e.toString()));
     }
   }
 
   //search contacts
 
-  void _searchContacts(event, emit) {
+  void _searchContacts(SearchContacts event, Emitter<PromiseState> emit) {
     if (state is PromiseLoaded) {
       final currentState = state as PromiseLoaded;
       final query = event.query.toLowerCase();
@@ -54,8 +72,41 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
         PromiseLoaded(
           contacts: currentState.contacts,
           filteredContacts: filtered,
+          promise: currentState.promise,
         ),
       );
     }
+  }
+
+  void _onPromiseText(SetPromiseText event, Emitter<PromiseState> emit) {
+    if (state is! PromiseLoaded) return;
+
+    final current = state as PromiseLoaded;
+
+    final updatedPromise = current.promise.copyWith(text: event.text);
+    emit(
+      PromiseLoaded(
+        contacts: current.contacts,
+        filteredContacts: current.filteredContacts,
+        promise: updatedPromise,
+      ),
+    );
+  }
+
+  void _setPerson(SetPerson event, Emitter<PromiseState> emit) {
+    if (state is! PromiseLoaded) return;
+
+    final current = state as PromiseLoaded;
+
+    emit(
+      PromiseLoaded(
+        contacts: current.contacts,
+        filteredContacts: current.filteredContacts,
+        promise: current.promise.copyWith(
+          toName: event.name,
+          toPhone: event.phone,
+        ),
+      ),
+    );
   }
 }

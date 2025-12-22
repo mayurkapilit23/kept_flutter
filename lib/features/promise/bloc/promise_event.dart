@@ -25,3 +25,25 @@ class SearchContacts extends PromiseEvent {
   @override
   List<Object> get props => [query];
 }
+
+class SetPromiseText extends PromiseEvent {
+  final String text;
+
+  const SetPromiseText(this.text);
+
+  @override
+  List<Object> get props => [text];
+}
+
+class SetPerson extends PromiseEvent {
+  final String name;
+  final String phone;
+
+  const SetPerson(this.name, this.phone);
+}
+
+class SetDueDate extends PromiseEvent {
+  final DateTime dueAt;
+
+  const SetDueDate(this.dueAt);
+}

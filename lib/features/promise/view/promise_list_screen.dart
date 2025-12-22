@@ -42,8 +42,8 @@ class _PromiseListScreenState extends State<PromiseListScreen> {
               //   context,
               //   MaterialPageRoute(builder: (context) => PromiseDetailsScreen()),
               // );
-
-              Navigator.push(context, AppRoute.smooth(PromiseDetailsScreen()));
+              navigateTo(context, PromiseDetailsScreen());
+              // Navigator.push(context, AppRoute.smooth(PromiseDetailsScreen()));
             },
           ),
           PromiseCard(

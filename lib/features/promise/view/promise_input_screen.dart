@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_contacts/contact.dart';
 import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
+import 'package:kept_flutter/features/promise/bloc/promise_bloc.dart';
+import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
+import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
 import 'package:kept_flutter/features/promise/view/select_person_screen.dart';
 import 'package:kept_flutter/features/promise/widgets/custom_button.dart';
 import 'package:lottie/lottie.dart';
@@ -23,7 +25,6 @@ class PromiseInputScreen extends StatefulWidget {
 class _PromiseInputScreenState extends State<PromiseInputScreen> {
   final controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  List<Contact> contacts = [];
 
   @override
   void initState() {
@@ -55,23 +56,16 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
             : AppColors.lightPrimary,
         actions: [
           AnimatedSwitcher(
-            duration: const Duration(milliseconds: 200),
+            duration: const Duration(milliseconds: 150),
             child: IconButton(
-              key: ValueKey(context.watch<ThemeBloc>().state.theme),
+              key: ValueKey(context.isDark),
               onPressed: () {
                 HapticFeedback.selectionClick();
-                final isDark =
-                    context.read<ThemeBloc>().state.theme == AppTheme.dark;
-
                 context.read<ThemeBloc>().add(
-                  ToggleTheme(isDark ? AppTheme.light : AppTheme.dark),
+                  ToggleTheme(context.isDark ? AppTheme.light : AppTheme.dark),
                 );
               },
-              icon: Icon(
-                context.watch<ThemeBloc>().state.theme == AppTheme.dark
-                    ? Icons.light_mode
-                    : Icons.dark_mode,
-              ),
+              icon: Icon(context.isDark ? Icons.light_mode : Icons.dark_mode),
             ),
           ),
         ],
@@ -88,69 +82,97 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                 child: IntrinsicHeight(
                   child: Padding(
                     padding: const EdgeInsets.all(20),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        //Animation
-                        Center(
-                          child: Lottie.asset(
-                            'assets/Assignees.json',
-                            height: constraints.maxHeight * 0.50,
-                          ),
-                        ),
-                        const SizedBox(height: 24),
-
-                        // Input
-                        TextField(
-                          controller: controller,
-                          // autofocus: true,
-                          focusNode: _focusNode,
-                          decoration: InputDecoration(
-                            hintText: 'What did you promise?',
-                            hintStyle: TextStyle(
-                              fontWeight: FontWeight.normal,
-                              color: context.isDark ? Colors.grey : Colors.grey,
+                    child: BlocConsumer<PromiseBloc, PromiseState>(
+                      listener: (context, state) {
+                        // if (state is PromiseError) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(content: Text(state.message)),
+                        //   );
+                        // }
+                      },
+                      builder: (context, state) {
+                        return Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            //Animation
+                            Center(
+                              child: Lottie.asset(
+                                'assets/Assignees.json',
+                                height: constraints.maxHeight * 0.50,
+                              ),
                             ),
-                            border: InputBorder.none,
-                          ),
-                          style: const TextStyle(
-                            fontSize: 26,
-                            fontWeight: FontWeight.w900,
-                          ),
-                        ),
+                            const SizedBox(height: 24),
 
-                        const SizedBox(height: 16),
+                            // Input
+                            TextField(
+                              controller: controller,
+                              // autofocus: true,
+                              focusNode: _focusNode,
+                              decoration: InputDecoration(
+                                hintText: 'What did you promise?',
+                                hintStyle: TextStyle(
+                                  fontWeight: FontWeight.normal,
+                                  color: context.isDark
+                                      ? Colors.grey
+                                      : Colors.grey,
+                                ),
+                                border: InputBorder.none,
+                              ),
+                              style: const TextStyle(
+                                fontSize: 26,
+                                fontWeight: FontWeight.w900,
+                              ),
+                            ),
 
-                        const Text(
-                          'Examples: Send ₹5,000 · Call mom · Share documents',
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                            const SizedBox(height: 16),
 
-                        const Spacer(),
+                            const Text(
+                              'Examples: Send ₹5,000 · Call mom · Share documents',
+                              style: TextStyle(color: Colors.grey),
+                            ),
 
-                        //  Bottom Button
-                        Align(
-                          alignment: Alignment.centerRight,
-                          child: AppPrimaryButton(
-                            title: 'Next',
-                            height: ButtonHeight.medium,
-                            width: ButtonWidth.fixed,
-                            onPressed: () async {
-                              // Navigator.push(
-                              //   context,
-                              //   MaterialPageRoute(
-                              //     builder: (_) => SelectPersonScreen(),
-                              //   ),
-                              // );
+                            const Spacer(),
 
-                              Navigator.push(
-                                context,
-                                AppRoute.smooth(SelectPersonScreen()),
-                              );
-                            },
-                          ),
-                        ),
-                      ],
+                            //  Bottom Button
+                            Align(
+                              alignment: Alignment.centerRight,
+                              child: ValueListenableBuilder(
+                                valueListenable: controller,
+                                builder: (context, value, child) {
+                                  return CustomButton(
+                                    title: 'Next',
+                                    height: ButtonHeight.medium,
+                                    width: ButtonWidth.fixed,
+                                    onPressed: controller.text.trim().isEmpty
+                                        ? null
+                                        : () async {
+                                            context.read<PromiseBloc>().add(
+                                              SetPromiseText(
+                                                controller.text
+                                                    .toString()
+                                                    .trim(),
+                                              ),
+                                            );
+
+                                            navigateTo(
+                                              context,
+                                              SelectPersonScreen(),
+                                            );
+
+                                            // Navigator.push(
+                                            //   context,
+                                            //   AppRoute.smooth(
+                                            //     const SelectPersonScreen(),
+                                            //   ),
+                                            // );
+                                          },
+                                  );
+                                },
+                              ),
+                            ),
+                          ],
+                        );
+                      },
                     ),
                   ),
                 ),

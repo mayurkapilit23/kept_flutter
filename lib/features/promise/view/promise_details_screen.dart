@@ -49,7 +49,7 @@ class PromiseDetailsScreen extends StatelessWidget {
             ),
             const Spacer(),
 
-            AppPrimaryButton(
+            CustomButton(
               title: 'Mark as Done',
               height: ButtonHeight.medium,
               width: ButtonWidth.full,

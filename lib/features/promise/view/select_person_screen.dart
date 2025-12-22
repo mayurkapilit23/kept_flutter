@@ -2,10 +2,10 @@ import 'dart:core';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
-import 'package:kept_flutter/features/promise/view/promise_preview_screen.dart';
+import 'package:kept_flutter/features/promise/widgets/promise_preview_card.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../core/colors/app_colors.dart';
 import '../bloc/promise_bloc.dart';
@@ -69,7 +69,14 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
             }
 
             if (state is PromiseLoading) {
-              return Center(child: CircularProgressIndicator());
+              return Center(
+                child: LoadingAnimationWidget.fourRotatingDots(
+                  color: context.isDark
+                      ? AppColors.lightSecondary
+                      : AppColors.darkPrimary,
+                  size: 30,
+                ),
+              );
             }
 
             if (state is PromiseError) {
@@ -82,7 +89,7 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                 children: [
                   CustomSearchBar(
                     hintText: "Search Contacts",
-                    autofocus: true,
+                    // autofocus: true,
                     onChanged: (query) {
                       // print("search => $query");
 
@@ -101,8 +108,18 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                     child: ListView.separated(
                       scrollDirection: Axis.horizontal,
                       itemBuilder: (_, i) => CircleAvatar(
+                        backgroundColor: context.isDark
+                            ? Colors.white.withOpacity(0.1)
+                            : Colors.black.withOpacity(0.05),
                         radius: 30,
-                        child: Text(['R', 'A', 'M'][i]),
+                        child: Text(
+                          ['R', 'A', 'M'][i],
+                          style: TextStyle(
+                            color: context.isDark
+                                ? AppColors.lightSecondary
+                                : AppColors.darkPrimary,
+                          ),
+                        ),
                       ),
                       separatorBuilder: (_, __) => const SizedBox(width: 12),
                       itemCount: 3,
@@ -131,9 +148,16 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                           margin: EdgeInsets.only(bottom: 5),
                           child: ListTile(
                             onTap: () {
-                              Navigator.push(
+                              HelperMethods.showOverlay(
                                 context,
-                                AppRoute.smooth(PromisePreviewScreen()),
+                                PromisePreviewCard(),
+                              );
+                              final phone = contact.phones.isNotEmpty
+                                  ? contact.phones.first.number
+                                  : '';
+
+                              context.read<PromiseBloc>().add(
+                                SetPerson(contact.displayName, phone),
                               );
                             },
                             shape: RoundedRectangleBorder(
@@ -141,11 +165,19 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                             ),
 
                             leading: CircleAvatar(
+                              backgroundColor: context.isDark
+                                  ? Colors.white.withOpacity(0.1)
+                                  : Colors.black.withOpacity(0.05),
                               child: Text(
                                 contact.displayName.isNotEmpty
                                     ? contact.displayName[0]
                                     : '?',
-                                style: TextStyle(fontSize: 15),
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: context.isDark
+                                      ? AppColors.lightSecondary
+                                      : AppColors.darkPrimary,
+                                ),
                               ),
                             ),
                             title: Text(
