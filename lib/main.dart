@@ -2,7 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kept_flutter/core/utils/app_dark_theme.dart';
 import 'package:kept_flutter/core/utils/app_light_theme.dart';
-import 'package:kept_flutter/features/auth/view/mobile_input_screen.dart';
+import 'package:kept_flutter/features/promise/bloc/promise_bloc.dart';
+import 'package:kept_flutter/features/promise/data/repositories/promise_repository.dart';
 import 'package:kept_flutter/features/theme/bloc/theme_bloc.dart';
 import 'package:kept_flutter/features/theme/bloc/theme_state.dart';
 
@@ -12,6 +13,7 @@ import 'features/theme/data/repositories/theme_repository.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final themeRepository = ThemeRepository();
+  final promiseRepository = PromiseRepository();
   //to load first theme
   final initialTheme = await themeRepository.getTheme();
   runApp(
@@ -20,6 +22,7 @@ void main() async {
         BlocProvider<ThemeBloc>(
           create: (_) => ThemeBloc(themeRepository, initialTheme),
         ),
+        BlocProvider<PromiseBloc>(create: (_) => PromiseBloc(promiseRepository)),
       ],
       child: const MyApp(),
     ),

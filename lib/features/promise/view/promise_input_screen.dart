@@ -44,8 +44,6 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    // final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return Scaffold(
       backgroundColor: context.isDark
           ? AppColors.darkPrimary

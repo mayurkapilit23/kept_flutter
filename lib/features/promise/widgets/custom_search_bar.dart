@@ -3,7 +3,6 @@ import 'package:kept_flutter/core/colors/app_colors.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 class CustomSearchBar extends StatefulWidget {
-  final TextEditingController controller;
   final String hintText;
   final bool autofocus;
   final TextInputType keyboardType;
@@ -15,7 +14,6 @@ class CustomSearchBar extends StatefulWidget {
 
   const CustomSearchBar({
     super.key,
-    required this.controller,
     required this.hintText,
     this.autofocus = false,
     this.keyboardType = TextInputType.text,
@@ -44,7 +42,7 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
         padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 4),
         decoration: BoxDecoration(
           color: context.isDark
-              ? AppColors.darkSecondary
+              ? AppColors.darkPrimary
               : AppColors.lightPrimary,
 
           borderRadius: BorderRadius.circular(10),
@@ -61,7 +59,6 @@ class _CustomSearchBarState extends State<CustomSearchBar> {
           ),
         ),
         child: TextField(
-          controller: widget.controller,
           autofocus: widget.autofocus,
           keyboardType: widget.keyboardType,
           obscureText: widget.obscureText,
