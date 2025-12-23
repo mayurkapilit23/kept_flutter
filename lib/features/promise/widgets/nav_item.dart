@@ -25,7 +25,7 @@ class NavItem extends StatelessWidget {
       onTap: () => onTap(index),
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.all(12),
+        padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
           color: context.isDark
               ? isSelected
@@ -38,7 +38,7 @@ class NavItem extends StatelessWidget {
         ),
         child: Icon(
           icon,
-          size: 26,
+          size: 30,
           color: context.isDark
               ? isSelected
                     ? AppColors.lightSecondary

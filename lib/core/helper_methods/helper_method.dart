@@ -12,18 +12,18 @@ class HelperMethods {
 
   static String formatTime(DateTime date) => DateFormat('h:mm a').format(date);
 
-  static OverlayEntry? _overlayEntry;
+  static OverlayEntry? overlayEntry;
 
   static void showOverlay(BuildContext context, Widget child) {
-    _overlayEntry = OverlayEntry(
+    overlayEntry = OverlayEntry(
       builder: (context) => Stack(
         children: [
           // Optional dark background
           Positioned.fill(
             child: GestureDetector(
               onTap: () {
-                _overlayEntry?.remove();
-                _overlayEntry = null;
+                overlayEntry?.remove();
+                overlayEntry = null;
               },
               child: Container(color: Colors.black.withOpacity(0.3)),
             ),
@@ -51,6 +51,16 @@ class HelperMethods {
       ),
     );
 
-    Overlay.of(context).insert(_overlayEntry!);
+    Overlay.of(context).insert(overlayEntry!);
+  }
+
+  static bool closeOverlayIfOpen() {
+    // If overlay is open, close it and STOP navigation
+    if (HelperMethods.overlayEntry != null) {
+      HelperMethods.overlayEntry!.remove();
+      HelperMethods.overlayEntry = null;
+      return true;
+    }
+    return false;
   }
 }

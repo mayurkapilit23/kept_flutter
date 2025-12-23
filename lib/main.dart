@@ -22,7 +22,9 @@ void main() async {
         BlocProvider<ThemeBloc>(
           create: (_) => ThemeBloc(themeRepository, initialTheme),
         ),
-        BlocProvider<PromiseBloc>(create: (_) => PromiseBloc(promiseRepository)),
+        BlocProvider<PromiseBloc>(
+          create: (_) => PromiseBloc(promiseRepository),
+        ),
       ],
       child: const MyApp(),
     ),

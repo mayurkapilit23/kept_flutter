@@ -28,178 +28,192 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: context.isDark
-          ? AppColors.darkPrimary
-          : AppColors.lightPrimary,
+    return PopScope(
+      canPop: false,
 
-      appBar: AppBar(
-        surfaceTintColor: Colors.transparent,
+      onPopInvoked: (didPop) {
+        // If Flutter already popped the route, do nothing
+        if (didPop) return;
+
+        if (HelperMethods.closeOverlayIfOpen()) return;
+        // No overlay → allow normal back
+        Navigator.of(context).pop();
+      },
+      child: Scaffold(
         backgroundColor: context.isDark
             ? AppColors.darkPrimary
             : AppColors.lightPrimary,
 
-        title: const Text('Select Person'),
-      ),
-      body: Padding(
-        padding: const EdgeInsets.all(16),
-        child: BlocConsumer<PromiseBloc, PromiseState>(
-          listener: (context, state) {},
-          builder: (context, state) {
-            if (state is PromiseInitial) {
-              return Center(
-                child: ListTile(
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(12),
-                    // side: const BorderSide(color: Colors.grey),
-                  ),
-                  tileColor: context.isDark
-                      ? AppColors.darkSecondary
-                      : AppColors.lightSecondary,
-                  title: const Text(
-                    'Pick from contacts',
-                    style: TextStyle(fontSize: 15),
-                  ),
-                  trailing: const Icon(Icons.chevron_right),
-                  onTap: () async {
-                    context.read<PromiseBloc>().add(LoadContacts());
-                  },
-                ),
-              );
-            }
+        appBar: AppBar(
+          surfaceTintColor: Colors.transparent,
+          backgroundColor: context.isDark
+              ? AppColors.darkPrimary
+              : AppColors.lightPrimary,
 
-            if (state is PromiseLoading) {
-              return Center(
-                child: LoadingAnimationWidget.fourRotatingDots(
-                  color: context.isDark
-                      ? AppColors.lightSecondary
-                      : AppColors.darkPrimary,
-                  size: 30,
-                ),
-              );
-            }
-
-            if (state is PromiseError) {
-              return Center(child: Text(state.message));
-            }
-
-            if (state is PromiseLoaded) {
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  CustomSearchBar(
-                    hintText: "Search Contacts",
-                    // autofocus: true,
-                    onChanged: (query) {
-                      // print("search => $query");
-
-                      context.read<PromiseBloc>().add(SearchContacts(query));
+          title: const Text('Select Person'),
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(16),
+          child: BlocConsumer<PromiseBloc, PromiseState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              if (state is PromiseInitial) {
+                return Center(
+                  child: ListTile(
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12),
+                      // side: const BorderSide(color: Colors.grey),
+                    ),
+                    tileColor: context.isDark
+                        ? AppColors.darkSecondary
+                        : AppColors.lightSecondary,
+                    title: const Text(
+                      'Pick from contacts',
+                      style: TextStyle(fontSize: 15),
+                    ),
+                    trailing: const Icon(Icons.chevron_right),
+                    onTap: () async {
+                      context.read<PromiseBloc>().add(LoadContacts());
                     },
                   ),
+                );
+              }
 
-                  const SizedBox(height: 20),
-                  const Text(
-                    'Recent',
-                    style: TextStyle(fontWeight: FontWeight.w600),
+              if (state is PromiseLoading) {
+                return Center(
+                  child: LoadingAnimationWidget.fourRotatingDots(
+                    color: context.isDark
+                        ? AppColors.lightSecondary
+                        : AppColors.darkPrimary,
+                    size: 30,
                   ),
-                  const SizedBox(height: 12),
-                  SizedBox(
-                    height: 70,
-                    child: ListView.separated(
-                      scrollDirection: Axis.horizontal,
-                      itemBuilder: (_, i) => CircleAvatar(
-                        backgroundColor: context.isDark
-                            ? Colors.white.withOpacity(0.1)
-                            : Colors.black.withOpacity(0.05),
-                        radius: 30,
-                        child: Text(
-                          ['R', 'A', 'M'][i],
-                          style: TextStyle(
-                            color: context.isDark
-                                ? AppColors.lightSecondary
-                                : AppColors.darkPrimary,
-                          ),
-                        ),
-                      ),
-                      separatorBuilder: (_, __) => const SizedBox(width: 12),
-                      itemCount: 3,
-                    ),
-                  ),
-                  const Text(
-                    'All Contacts',
-                    style: TextStyle(fontWeight: FontWeight.w600),
-                  ),
-                  const SizedBox(height: 12),
-                  Expanded(
-                    child: ListView.builder(
-                      physics: const BouncingScrollPhysics(), // iOS-like smooth
-                      cacheExtent: 300, // pre-render offscreen items
-                      itemCount: state.filteredContacts.length,
-                      itemBuilder: (context, index) {
-                        final contact = state.filteredContacts[index];
+                );
+              }
 
-                        return Container(
-                          decoration: BoxDecoration(
-                            color: context.isDark
-                                ? AppColors.darkSecondary
-                                : AppColors.lightSecondary,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          margin: EdgeInsets.only(bottom: 5),
-                          child: ListTile(
-                            onTap: () {
-                              HelperMethods.showOverlay(
-                                context,
-                                PromisePreviewCard(),
-                              );
-                              final phone = contact.phones.isNotEmpty
-                                  ? contact.phones.first.number
-                                  : '';
+              if (state is PromiseError) {
+                return Center(child: Text(state.message));
+              }
 
-                              context.read<PromiseBloc>().add(
-                                SetPerson(contact.displayName, phone),
-                              );
-                            },
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
+              if (state is PromiseLoaded) {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    CustomSearchBar(
+                      hintText: "Search Contacts",
+                      // autofocus: true,
+                      onChanged: (query) {
+                        // print("search => $query");
 
-                            leading: CircleAvatar(
-                              backgroundColor: context.isDark
-                                  ? Colors.white.withOpacity(0.1)
-                                  : Colors.black.withOpacity(0.05),
-                              child: Text(
-                                contact.displayName.isNotEmpty
-                                    ? contact.displayName[0]
-                                    : '?',
-                                style: TextStyle(
-                                  fontSize: 15,
-                                  color: context.isDark
-                                      ? AppColors.lightSecondary
-                                      : AppColors.darkPrimary,
-                                ),
-                              ),
-                            ),
-                            title: Text(
-                              contact.displayName,
-                              style: TextStyle(fontSize: 14),
-                            ),
-                            subtitle: contact.phones.isNotEmpty
-                                ? Text(
-                                    contact.phones.first.number,
-                                    style: TextStyle(fontSize: 14),
-                                  )
-                                : null,
-                          ),
-                        );
+                        context.read<PromiseBloc>().add(SearchContacts(query));
                       },
                     ),
-                  ),
-                ],
-              );
-            }
-            return SizedBox();
-          },
+
+                    const SizedBox(height: 20),
+                    const Text(
+                      'Recent',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 12),
+                    SizedBox(
+                      height: 70,
+                      child: ListView.separated(
+                        scrollDirection: Axis.horizontal,
+                        itemBuilder: (_, i) => CircleAvatar(
+                          backgroundColor: context.isDark
+                              ? Colors.white.withOpacity(0.1)
+                              : Colors.black.withOpacity(0.05),
+                          radius: 30,
+                          child: Text(
+                            ['R', 'A', 'M'][i],
+                            style: TextStyle(
+                              color: context.isDark
+                                  ? AppColors.lightSecondary
+                                  : AppColors.darkPrimary,
+                            ),
+                          ),
+                        ),
+                        separatorBuilder: (_, __) => const SizedBox(width: 12),
+                        itemCount: 3,
+                      ),
+                    ),
+                    const Text(
+                      'All Contacts',
+                      style: TextStyle(fontWeight: FontWeight.w600),
+                    ),
+                    const SizedBox(height: 12),
+                    Expanded(
+                      child: ListView.builder(
+                        physics: const BouncingScrollPhysics(),
+                        // iOS-like smooth
+                        cacheExtent: 300,
+                        // pre-render offscreen items
+                        itemCount: state.filteredContacts.length,
+                        itemBuilder: (context, index) {
+                          final contact = state.filteredContacts[index];
+
+                          return Container(
+                            decoration: BoxDecoration(
+                              color: context.isDark
+                                  ? AppColors.darkSecondary
+                                  : AppColors.lightSecondary,
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            margin: EdgeInsets.only(bottom: 5),
+                            child: ListTile(
+                              onTap: () {
+                                HelperMethods.showOverlay(
+                                  context,
+                                  PromisePreviewCard(),
+                                );
+                                final phone = contact.phones.isNotEmpty
+                                    ? contact.phones.first.number
+                                    : '';
+
+                                context.read<PromiseBloc>().add(
+                                  SetPerson(contact.displayName, phone),
+                                );
+                              },
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12),
+                              ),
+
+                              leading: CircleAvatar(
+                                backgroundColor: context.isDark
+                                    ? Colors.white.withOpacity(0.1)
+                                    : Colors.black.withOpacity(0.05),
+                                child: Text(
+                                  contact.displayName.isNotEmpty
+                                      ? contact.displayName[0]
+                                      : '?',
+                                  style: TextStyle(
+                                    fontSize: 15,
+                                    color: context.isDark
+                                        ? AppColors.lightSecondary
+                                        : AppColors.darkPrimary,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                contact.displayName,
+                                style: TextStyle(fontSize: 14),
+                              ),
+                              subtitle: contact.phones.isNotEmpty
+                                  ? Text(
+                                      contact.phones.first.number,
+                                      style: TextStyle(fontSize: 14),
+                                    )
+                                  : null,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ],
+                );
+              }
+              return SizedBox();
+            },
+          ),
         ),
       ),
     );
