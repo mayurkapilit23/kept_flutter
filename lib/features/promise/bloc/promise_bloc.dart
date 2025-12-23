@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_contacts/contact.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
 import 'package:uuid/uuid.dart';
@@ -11,17 +12,19 @@ import '../data/repositories/promise_repository.dart';
 
 class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
   final PromiseRepository storage;
-  Promise promise = Promise(
-    id: Uuid().v4(),
-    text: "",
-    toName: "",
-    toPhone: "",
-    createdAt: DateTime.now(),
-    dueAt: DateTime.now(),
-    isDone: false,
-  );
+
+  // Promise promise = Promise(
+  //   id: Uuid().v4(),
+  //   text: "",
+  //   toName: "",
+  //   toPhone: "",
+  //   createdAt: DateTime.now(),
+  //   dueAt: DateTime.now(),
+  //   isDone: false,
+  // );
 
   PromiseBloc(this.storage) : super(PromiseInitial()) {
+    log('🔥 PromiseBloc CREATED ${hashCode}');
     on<CheckPreviousLoad>(_checkPreviousLoad);
     on<LoadContacts>(_loadContacts);
     on<SearchContacts>(_searchContacts);
@@ -29,7 +32,8 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     on<SetPerson>(_setPerson);
   }
 
-  void _checkPreviousLoad(
+  //Check previous load
+  Future<void> _checkPreviousLoad(
     CheckPreviousLoad event,
     Emitter<PromiseState> emit,
   ) async {
@@ -37,21 +41,32 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     if (alreadyLoaded) {
       add(LoadContacts());
     }
+
+    // else {
+    //   emit(PromiseInitial());
+    // }
   }
 
   //load contacts
 
-  void _loadContacts(LoadContacts event, Emitter<PromiseState> emit) async {
-    log('Before Promise Loading =>   $promise.text');
+  Future<void> _loadContacts(
+    LoadContacts event,
+    Emitter<PromiseState> emit,
+  ) async {
+    // log('Before Promise Loading =>   $promise.text');
     emit(PromiseLoading());
     try {
       final contacts = await getContacts();
       await storage.setContactsLoaded(true);
+      final existingPromise = state is PromiseLoaded
+          ? (state as PromiseLoaded).promise
+          : _createEmptyPromise();
+
       emit(
         PromiseLoaded(
           contacts: contacts,
           filteredContacts: contacts,
-          promise: promise,
+          promise: existingPromise, // ✅ KEEP TEXT
         ),
       );
     } catch (e) {
@@ -62,53 +77,78 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
   //search contacts
 
   void _searchContacts(SearchContacts event, Emitter<PromiseState> emit) {
-    if (state is PromiseLoaded) {
-      final currentState = state as PromiseLoaded;
-      final query = event.query.toLowerCase();
+    final currentState = state as PromiseLoaded;
+    final query = event.query.toLowerCase();
 
-      final filtered = query.isEmpty
-          ? currentState.contacts
-          : currentState.contacts
-                .where((c) => c.displayName.toLowerCase().contains(query))
-                .toList();
+    final filtered = query.isEmpty
+        ? currentState.contacts
+        : currentState.contacts
+              .where((c) => c.displayName.toLowerCase().contains(query))
+              .toList();
 
-      emit(
-        PromiseLoaded(
-          contacts: currentState.contacts,
-          filteredContacts: filtered,
-          promise: currentState.promise,
-        ),
-      );
-    }
+    emit(
+      PromiseLoaded(
+        contacts: currentState.contacts,
+        filteredContacts: filtered,
+        promise: currentState.promise,
+      ),
+    );
   }
 
   void _onSetPromiseText(SetPromiseText event, Emitter<PromiseState> emit) {
-    log("_onSetPromiseText  state =>  ${state}");
+    // log("_onSetPromiseText  state =>  ${state}");
+    // final current = state as PromiseLoaded;
+    // log("after _onSetPromiseText  state =>  ${state}");
+    //
+    // log('Set Promise');
+    // // log("Person id => ${promise.id}");
+    // // log("Promise Text => ${promise.text}");
+    // // log("Person Name => ${promise.toName}");
+    // // log("Person Phone => ${promise.toPhone}");
+    //
+    // // promise.text = event.text;
+    // final updatedPromise = current.promise.copyWith(
+    //   text: event.text,
+    // );
+    //
+    // emit(
+    //   PromiseLoaded(
+    //     contacts: current.contacts,
+    //     filteredContacts: current.filteredContacts,
+    //     promise: updatedPromise,
+    //   ),
+    // );
 
-    log('Set Promise');
-    log("Person id => ${promise.id}");
-    log("Promise Text => ${promise.text}");
-    log("Person Name => ${promise.toName}");
-    log("Person Phone => ${promise.toPhone}");
+    Promise currentPromise;
+    List<Contact> contacts = [];
+    List<Contact> filteredContacts = [];
 
-    promise.text = event.text;
-    // final updatedPromise = promise.text = event.text;
-    log(' _onSetPromiseText : Before emit Promise Text =>  ${promise.text}');
-    emit(PromiseLoaded(contacts: [], filteredContacts: [], promise: promise));
-    emit(NavigateToSelectPromiseScreen());
+    if (state is PromiseLoaded) {
+      final loaded = state as PromiseLoaded;
+      currentPromise = loaded.promise;
+      contacts = loaded.contacts;
+      filteredContacts = loaded.filteredContacts;
+    } else {
+      currentPromise = _createEmptyPromise();
+    }
 
-    log('_onSetPromiseText : After emit Promise Text =>  ${promise.text}');
+    emit(
+      PromiseLoaded(
+        contacts: contacts,
+        filteredContacts: filteredContacts,
+        promise: currentPromise.copyWith(text: event.text),
+      ),
+    );
   }
 
+  // Set selected person
   void _setPerson(SetPerson event, Emitter<PromiseState> emit) {
-    if (state is! PromiseLoaded) return;
-
     final current = state as PromiseLoaded;
     log('Set Person');
-    log("Person id => ${promise.id}");
-    log("Promise Text => ${promise.text}");
-    log("Person Name => ${promise.toName}");
-    log("Person Phone => ${promise.toPhone}");
+    // log("Person id => ${promise.id}");
+    // log("Promise Text => ${promise.text}");
+    // log("Person Name => ${promise.toName}");
+    // log("Person Phone => ${promise.toPhone}");
 
     emit(
       PromiseLoaded(
@@ -119,6 +159,18 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
           toPhone: event.phone,
         ),
       ),
+    );
+  }
+
+  Promise _createEmptyPromise() {
+    return Promise(
+      id: const Uuid().v4(),
+      text: '',
+      toName: '',
+      toPhone: '',
+      createdAt: DateTime.now(),
+      dueAt: DateTime.now(),
+      isDone: false,
     );
   }
 }

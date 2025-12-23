@@ -29,6 +29,7 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log('SelectPersonScreen bloc => ${context.read<PromiseBloc>().hashCode}');
     return PopScope(
       canPop: false,
       onPopInvoked: (didPop) {
@@ -63,7 +64,16 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                 log(state.promise.toString());
                 log('Promise Text: ${state.promise.text}');
                 log('To Person : ${state.promise.toName}');
-                ;
+              }
+
+              if (state is PromiseLoaded && state.promise.toName.isNotEmpty) {
+                HelperMethods.showOverlay(
+                  context,
+                  BlocProvider.value(
+                    value: context.read<PromiseBloc>(),
+                    child: PromisePreviewCard(),
+                  ),
+                );
               }
             },
             builder: (context, state) {
@@ -88,7 +98,6 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                   ),
                 );
               }
-
               if (state is PromiseLoading) {
                 return Center(
                   child: LoadingAnimationWidget.fourRotatingDots(
@@ -105,6 +114,7 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
               }
 
               if (state is PromiseLoaded) {
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -179,13 +189,13 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                                   SetPerson(contact.displayName, phone),
                                 );
 
-                                await Future.delayed(
-                                  const Duration(milliseconds: 50),
-                                );
-                                HelperMethods.showOverlay(
-                                  context,
-                                  PromisePreviewCard(),
-                                );
+                                // HelperMethods.showOverlay(
+                                //   context,
+                                //   BlocProvider.value(
+                                //     value: context.read<PromiseBloc>(),
+                                //     child: PromisePreviewCard(),
+                                //   ),
+                                // );
                               },
                               shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(12),
@@ -225,7 +235,7 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                   ],
                 );
               }
-              return SizedBox();
+              return Center(child: SizedBox(child: Text('Hello')));
             },
           ),
         ),

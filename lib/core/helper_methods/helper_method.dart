@@ -3,7 +3,10 @@ import 'package:intl/intl.dart';
 import 'package:logger/logger.dart';
 
 extension ThemeBrightnessX on BuildContext {
-  bool get isDark => Theme.of(this).brightness == Brightness.dark;
+  bool get isDark =>
+      Theme
+          .of(this)
+          .brightness == Brightness.dark;
 
   bool get isLight => !isDark;
 }
@@ -19,39 +22,40 @@ class HelperMethods {
 
   static void showOverlay(BuildContext context, Widget child) {
     overlayEntry = OverlayEntry(
-      builder: (context) => Stack(
-        children: [
-          // Optional dark background
-          Positioned.fill(
-            child: GestureDetector(
-              onTap: () {
-                overlayEntry?.remove();
-                overlayEntry = null;
-              },
-              child: Container(color: Colors.black.withOpacity(0.3)),
-            ),
-          ),
+      builder: (context) =>
+          Stack(
+            children: [
+              // Optional dark background
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    overlayEntry?.remove();
+                    overlayEntry = null;
+                  },
+                  child: Container(color: Colors.black.withOpacity(0.3)),
+                ),
+              ),
 
-          // Overlay content
-          Center(
-            child: TweenAnimationBuilder<double>(
-              duration: const Duration(milliseconds: 250),
-              tween: Tween(begin: 0, end: 1),
-              curve: Curves.easeOutCubic,
-              builder: (_, value, child) {
-                return Opacity(
-                  opacity: value,
-                  child: Transform.scale(
-                    scale: 0.95 + (0.05 * value),
-                    child: child,
-                  ),
-                );
-              },
-              child: Material(color: Colors.transparent, child: child),
-            ),
+              // Overlay content
+              Center(
+                child: TweenAnimationBuilder<double>(
+                  duration: const Duration(milliseconds: 250),
+                  tween: Tween(begin: 0, end: 1),
+                  curve: Curves.easeOutCubic,
+                  builder: (_, value, child) {
+                    return Opacity(
+                      opacity: value,
+                      child: Transform.scale(
+                        scale: 0.95 + (0.05 * value),
+                        child: child,
+                      ),
+                    );
+                  },
+                  child: Material(color: Colors.transparent, child: child),
+                ),
+              ),
+            ],
           ),
-        ],
-      ),
     );
 
     Overlay.of(context).insert(overlayEntry!);

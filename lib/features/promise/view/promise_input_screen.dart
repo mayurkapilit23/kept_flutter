@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,9 +28,11 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
   final controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+
   @override
   void initState() {
     super.initState();
+    // context.read<PromiseBloc>().add(CheckPreviousLoad());
 
     // Delay focus until UI is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -45,6 +49,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
 
   @override
   Widget build(BuildContext context) {
+    log('PromiseInputScreen bloc => ${context.read<PromiseBloc>().hashCode}');
     return Scaffold(
       backgroundColor: context.isDark
           ? AppColors.darkPrimary
@@ -84,14 +89,18 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                     padding: const EdgeInsets.all(20),
                     child: BlocConsumer<PromiseBloc, PromiseState>(
                       listener: (context, state) {
-                        // if (state is PromiseError) {
-                        //   ScaffoldMessenger.of(context).showSnackBar(
-                        //     SnackBar(content: Text(state.message)),
-                        //   );
-                        // }
 
-                        if (state is NavigateToSelectPromiseScreen) {
-                          navigateTo(context, SelectPersonScreen());
+
+                        if (state is PromiseLoaded &&
+                            state.promise.text.isNotEmpty) {
+                          log('Listener state: $state');
+
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) => const SelectPersonScreen(),
+                            ),
+                          );
                         }
                       },
                       builder: (context, state) {
