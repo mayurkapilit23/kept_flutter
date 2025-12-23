@@ -45,8 +45,7 @@ class PromisePreviewCard extends StatelessWidget {
               children: [
                 // Promise text
                 Text(
-                  "Pay 5000",
-                  // p.text,
+                  p.text,
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.w600,
@@ -57,7 +56,7 @@ class PromisePreviewCard extends StatelessWidget {
                 const SizedBox(height: 12),
 
                 Text(
-                  'To ${p.toName}',
+                  'To 🧑${p.toName}',
                   style: TextStyle(
                     fontSize: 16,
                     color: context.isDark ? Colors.white70 : Colors.black87,
@@ -80,9 +79,9 @@ class PromisePreviewCard extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 6),
-                Wrap(
-                  spacing: 12,
-                  alignment: WrapAlignment.center,
+                Divider(),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     // ChoiceChip(
                     //   label: const Text("Tomorrow"),
@@ -94,18 +93,10 @@ class PromisePreviewCard extends StatelessWidget {
                     //   selected: false,
                     //   onSelected: (_) {},
                     // ),
+                    IconButton(onPressed: () {}, icon: Icon(Icons.menu)),
                     CustomButton(
-                      title: 'Tomorrow',
-                      height: ButtonHeight.medium,
-                      width: ButtonWidth.auto,
-                      onPressed: () {
-                        HapticFeedback.lightImpact();
-                      },
-                    ),
-
-                    CustomButton(
-                      title: 'Set Reminder',
-                      height: ButtonHeight.medium,
+                      title: 'Send',
+                      height: ButtonHeight.small,
                       width: ButtonWidth.auto,
                       onPressed: () {
                         HapticFeedback.lightImpact();
@@ -113,6 +104,7 @@ class PromisePreviewCard extends StatelessWidget {
                     ),
                   ],
                 ),
+                const SizedBox(height: 6),
               ],
             ),
           ),

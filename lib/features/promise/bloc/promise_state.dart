@@ -37,16 +37,9 @@ class PromiseLoaded extends PromiseState {
   });
 
   @override
-  List<Object> get props => [contacts, filteredContacts,promise];
+  List<Object> get props => [contacts, filteredContacts, promise];
 }
 
-class NavigateToSelectPerson extends PromiseState {
-
-  const NavigateToSelectPerson();
-
-  @override
-  List<Object?> get props => [];
-}
 
 
 class PromiseError extends PromiseState {
@@ -57,3 +50,7 @@ class PromiseError extends PromiseState {
   @override
   List<Object> get props => [message];
 }
+
+// Navigation
+
+class NavigateToSelectPromiseScreen extends PromiseState {}

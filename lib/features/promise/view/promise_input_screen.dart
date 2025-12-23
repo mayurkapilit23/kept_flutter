@@ -89,6 +89,10 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                         //     SnackBar(content: Text(state.message)),
                         //   );
                         // }
+
+                        if (state is NavigateToSelectPromiseScreen) {
+                          navigateTo(context, SelectPersonScreen());
+                        }
                       },
                       builder: (context, state) {
                         return Column(
@@ -127,7 +131,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                             const SizedBox(height: 16),
 
                             const Text(
-                              'Examples: Send ₹5,000 · Call mom · Share documents',
+                              'e.g. Send ₹5,000 · Call mom · Share documents',
                               style: TextStyle(color: Colors.grey),
                             ),
 
@@ -152,11 +156,6 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                                                     .toString()
                                                     .trim(),
                                               ),
-                                            );
-
-                                            navigateTo(
-                                              context,
-                                              SelectPersonScreen(),
                                             );
 
                                             // Navigator.push(

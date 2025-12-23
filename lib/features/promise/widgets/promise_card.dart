@@ -28,7 +28,13 @@ class PromiseCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
         child: InkWell(
           borderRadius: BorderRadius.circular(12),
-          onTap: onTap,
+          splashFactory: InkRipple.splashFactory, // normal ripple effect
+          onTap: () {
+            // Wait a short time so ripple is visible, then navigate
+            Future.delayed(const Duration(milliseconds: 100), () {
+              if (onTap != null) onTap!();
+            });
+          },
           child: Container(
             padding: const EdgeInsets.all(16),
 

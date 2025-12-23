@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -30,7 +31,6 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
   Widget build(BuildContext context) {
     return PopScope(
       canPop: false,
-
       onPopInvoked: (didPop) {
         // If Flutter already popped the route, do nothing
         if (didPop) return;
@@ -55,7 +55,17 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
         body: Padding(
           padding: const EdgeInsets.all(16),
           child: BlocConsumer<PromiseBloc, PromiseState>(
-            listener: (context, state) {},
+            listener: (context, state) {
+              if (state is PromiseLoading) {
+                log("Loading");
+              } else if (state is PromiseLoaded) {
+                log("Loaded");
+                log(state.promise.toString());
+                log('Promise Text: ${state.promise.text}');
+                log('To Person : ${state.promise.toName}');
+                ;
+              }
+            },
             builder: (context, state) {
               if (state is PromiseInitial) {
                 return Center(
@@ -160,17 +170,21 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                             ),
                             margin: EdgeInsets.only(bottom: 5),
                             child: ListTile(
-                              onTap: () {
-                                HelperMethods.showOverlay(
-                                  context,
-                                  PromisePreviewCard(),
-                                );
+                              onTap: () async {
                                 final phone = contact.phones.isNotEmpty
                                     ? contact.phones.first.number
                                     : '';
 
                                 context.read<PromiseBloc>().add(
                                   SetPerson(contact.displayName, phone),
+                                );
+
+                                await Future.delayed(
+                                  const Duration(milliseconds: 50),
+                                );
+                                HelperMethods.showOverlay(
+                                  context,
+                                  PromisePreviewCard(),
                                 );
                               },
                               shape: RoundedRectangleBorder(
