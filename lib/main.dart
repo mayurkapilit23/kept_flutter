@@ -14,7 +14,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   final themeRepository = ThemeRepository();
   final promiseRepository = PromiseRepository();
-  //to load first theme
+  //To load first theme
   final initialTheme = await themeRepository.getTheme();
   runApp(
     MultiBlocProvider(

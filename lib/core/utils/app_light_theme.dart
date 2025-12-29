@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 
 import '../colors/app_colors.dart';
 
@@ -11,7 +10,8 @@ class AppLightTheme {
       backgroundColor: AppColors.lightSecondary,
     ),
 
-    fontFamily: GoogleFonts.poppins().fontFamily,
+    // fontFamily: GoogleFonts.poppins().fontFamily,
+    fontFamily: 'poppins',
 
     textTheme: const TextTheme(
       headlineLarge: TextStyle(fontSize: 28, fontWeight: FontWeight.bold),

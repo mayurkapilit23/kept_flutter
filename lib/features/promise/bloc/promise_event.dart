@@ -12,6 +12,11 @@ class LoadContacts extends PromiseEvent {
   List<Object> get props => [];
 }
 
+class PickContactsTapped extends PromiseEvent {
+  @override
+  List<Object> get props => [];
+}
+
 class CheckPreviousLoad extends PromiseEvent {
   @override
   List<Object> get props => [];
@@ -25,6 +30,10 @@ class SearchContacts extends PromiseEvent {
   @override
   List<Object> get props => [query];
 }
+
+class ClearSelectedPerson extends PromiseEvent {  @override
+List<Object> get props => [];}
+
 
 class SetPromiseText extends PromiseEvent {
   final String text;

@@ -24,8 +24,30 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
   // );
 
   PromiseBloc(this.storage) : super(PromiseInitial()) {
-    log('🔥 PromiseBloc CREATED ${hashCode}');
+    log('🔥 PromiseBloc CREATED $hashCode');
     on<CheckPreviousLoad>(_checkPreviousLoad);
+    // on<PickContactsTapped>((event, emit) {
+    //   emit(PromiseLoading());
+    //   add(LoadContacts());
+    // });
+
+    on<ClearSelectedPerson>((event, emit) {
+      if (state is! PromiseLoaded) return;
+
+      final current = state as PromiseLoaded;
+
+      emit(
+        PromiseLoaded(
+          contacts: current.contacts,
+          filteredContacts: current.filteredContacts,
+          promise: current.promise.copyWith(
+            toName: '',
+            toPhone: '',
+          ),
+        ),
+      );
+    });
+
     on<LoadContacts>(_loadContacts);
     on<SearchContacts>(_searchContacts);
     on<SetPromiseText>(_onSetPromiseText);
@@ -41,14 +63,12 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     if (alreadyLoaded) {
       add(LoadContacts());
     }
-
-    // else {
-    //   emit(PromiseInitial());
-    // }
+    else {
+      emit(PromiseInitial());
+    }
   }
 
   //load contacts
-
   Future<void> _loadContacts(
     LoadContacts event,
     Emitter<PromiseState> emit,
@@ -143,6 +163,7 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
 
   // Set selected person
   void _setPerson(SetPerson event, Emitter<PromiseState> emit) {
+    if (state is! PromiseLoaded) return;
     final current = state as PromiseLoaded;
     log('Set Person');
     // log("Person id => ${promise.id}");
