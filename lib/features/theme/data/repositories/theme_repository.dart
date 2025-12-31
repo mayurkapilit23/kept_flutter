@@ -5,9 +5,12 @@ enum AppTheme { light, dark }
 class ThemeRepository {
   static const _themeKey = 'app_theme';
 
+  final SharedPreferences _prefs;
+
+  ThemeRepository(this._prefs);
+
   Future<AppTheme> getTheme() async {
-    final prefs = await SharedPreferences.getInstance();
-    final themeIndex = prefs.getInt(_themeKey);
+    final themeIndex = _prefs.getInt(_themeKey);
 
     // Default theme when app runs first time
     if (themeIndex == null || themeIndex >= AppTheme.values.length) {
@@ -18,7 +21,6 @@ class ThemeRepository {
   }
 
   Future<void> saveTheme(AppTheme theme) async {
-    final prefs = await SharedPreferences.getInstance();
-    await prefs.setInt(_themeKey, theme.index);
+    await _prefs.setInt(_themeKey, theme.index);
   }
 }

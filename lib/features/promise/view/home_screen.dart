@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/view/promise_input_screen.dart';
 import 'package:kept_flutter/features/promise/view/promise_list_screen.dart';
 
 import '../../../core/colors/app_colors.dart';
-import '../bloc/promise_bloc.dart';
-import '../bloc/promise_event.dart';
 import '../widgets/nav_item.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -29,13 +26,6 @@ class _HomeScreenState extends State<HomeScreen> {
     setState(() => _currentIndex = index);
   }
 
-  // @override
-  // void initState() {
-  //   context.read<PromiseBloc>().add(CheckPreviousLoad());
-  //   super.initState();
-  // }
-
-
   int _currentIndex = 0;
 
   @override
@@ -47,9 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 90, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
           child: Container(
-            height: 54,
+            height: 58,
             width: MediaQuery.of(context).size.width * 0.50,
             decoration: BoxDecoration(
               color: context.isDark

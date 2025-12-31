@@ -28,18 +28,25 @@ class PromiseTextSet extends PromiseState {
 class PromiseLoaded extends PromiseState {
   final List<Contact> contacts;
   final List<Contact> filteredContacts;
-  final Promise promise;
+  // final Promise promise;
 
   const PromiseLoaded({
-    required this.promise,
+    // required this.promise,
     this.contacts = const [],
     this.filteredContacts = const [],
   });
 
   @override
-  List<Object> get props => [contacts, filteredContacts, promise];
+  List<Object> get props => [contacts, filteredContacts];
 }
 
+class NavigateToSelectPerson extends PromiseState {
+
+  const NavigateToSelectPerson();
+
+  @override
+  List<Object?> get props => [];
+}
 
 
 class PromiseError extends PromiseState {
@@ -50,7 +57,3 @@ class PromiseError extends PromiseState {
   @override
   List<Object> get props => [message];
 }
-
-// Navigation
-
-class NavigateToSelectPromiseScreen extends PromiseState {}

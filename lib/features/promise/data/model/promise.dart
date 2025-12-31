@@ -1,23 +1,21 @@
 class Promise {
-   String id;
-   String text;
-   String toName;
-   String toPhone;
-   DateTime createdAt;
-   DateTime dueAt;
-
-  final bool isDone;
+   String? id;
+   String? text;
+   String? toName;
+   String? toPhone;
+   DateTime? createdAt;
+   DateTime? dueAt;
+   bool? isDone;
 
   Promise({
-    required this.id,
-    required this.text,
-    required this.toName,
-    required this.toPhone,
-    required this.createdAt,
-    required this.dueAt,
-    required this.isDone,
+     this.id,
+     this.text,
+     this.toName,
+     this.toPhone,
+     this.createdAt,
+     this.dueAt,
+     this.isDone,
   });
-
   Promise copyWith({
     String? text,
     String? toName,
@@ -35,7 +33,6 @@ class Promise {
       isDone: isDone ?? this.isDone,
     );
   }
-
   factory Promise.fromJson(Map<String, dynamic> json) {
     return Promise(
       id: json['id'],

@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_bloc.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
@@ -28,11 +27,9 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
   final controller = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
-
   @override
   void initState() {
     super.initState();
-    // context.read<PromiseBloc>().add(CheckPreviousLoad());
 
     // Delay focus until UI is built
     WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -49,12 +46,12 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
 
   @override
   Widget build(BuildContext context) {
-    log('PromiseInputScreen bloc => ${context.read<PromiseBloc>().hashCode}');
     return Scaffold(
       backgroundColor: context.isDark
           ? AppColors.darkPrimary
           : AppColors.lightPrimary,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         surfaceTintColor: Colors.transparent,
         backgroundColor: context.isDark
             ? AppColors.darkPrimary
@@ -89,19 +86,11 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                     padding: const EdgeInsets.all(20),
                     child: BlocConsumer<PromiseBloc, PromiseState>(
                       listener: (context, state) {
-
-
-                        if (state is PromiseLoaded &&
-                            state.promise.text.isNotEmpty) {
-                          log('Listener state: $state');
-
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (_) => const SelectPersonScreen(),
-                            ),
-                          );
-                        }
+                        // if (state is PromiseError) {
+                        //   ScaffoldMessenger.of(context).showSnackBar(
+                        //     SnackBar(content: Text(state.message)),
+                        //   );
+                        // }
                       },
                       builder: (context, state) {
                         return Column(
@@ -118,6 +107,9 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
 
                             // Input
                             TextField(
+                              //   onChanged: (value){
+                              // final he=    context.read<PromiseBloc>().promiseModel.text=value;
+                              //   },
                               controller: controller,
                               // autofocus: true,
                               focusNode: _focusNode,
@@ -140,7 +132,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                             const SizedBox(height: 16),
 
                             const Text(
-                              'e.g. Send ₹5,000 · Call mom · Share documents',
+                              'Examples: Send ₹5,000 · Call mom · Share documents',
                               style: TextStyle(color: Colors.grey),
                             ),
 
@@ -159,20 +151,28 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                                     onPressed: controller.text.trim().isEmpty
                                         ? null
                                         : () async {
-                                            context.read<PromiseBloc>().add(
-                                              SetPromiseText(
-                                                controller.text
+                                            final promiseText =
+                                                context
+                                                    .read<PromiseBloc>()
+                                                    .promiseModel
+                                                    .text = controller.text
                                                     .toString()
-                                                    .trim(),
-                                              ),
+                                                    .trim();
+                                            log(
+                                              'PromiseInputScreen => $promiseText',
                                             );
 
-                                            // Navigator.push(
-                                            //   context,
-                                            //   AppRoute.smooth(
-                                            //     const SelectPersonScreen(),
-                                            //   ),
-                                            // );
+                                            context.read<PromiseBloc>().add(
+                                              SetPromiseText(promiseText),
+                                            );
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (c) =>
+                                                    SelectPersonScreen(),
+                                              ),
+                                            );
                                           },
                                   );
                                 },
