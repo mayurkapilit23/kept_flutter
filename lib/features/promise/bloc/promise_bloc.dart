@@ -9,6 +9,7 @@ import '../data/repositories/promise_repository.dart';
 
 class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
   final PromiseRepository storage;
+  final promiseModel = Promise();
 
   PromiseBloc(this.storage) : super(PromiseInitial()) {
     on<CheckPreviousLoad>(_checkPreviousLoad);
@@ -16,6 +17,20 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     on<SearchContacts>(_searchContacts);
     on<SetPromiseText>(_onPromiseText);
     on<SetPerson>(_setPerson);
+
+    on<SetDueDate>((event, emit) {
+      // final updatedPromise = state.promise.copyWith(
+      //   dueAt: event.dueAt,
+      // );
+      final current = state as PromiseLoaded;
+
+      emit(
+          PromiseLoaded(
+            contacts: current.contacts,
+            filteredContacts: current.filteredContacts,
+          )
+      );
+    });
   }
 
   void _checkPreviousLoad(
@@ -35,19 +50,11 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     try {
       final contacts = await getContacts();
       await storage.setContactsLoaded(true);
+
       emit(
         PromiseLoaded(
           contacts: contacts,
           filteredContacts: contacts,
-          promise: Promise(
-            id: const Uuid().v4(),
-            text: '',
-            toName: '',
-            toPhone: '',
-            createdAt: DateTime.now(),
-            dueAt: DateTime.now(),
-            isDone: false,
-          ),
         ),
       );
     } catch (e) {
@@ -72,7 +79,6 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
         PromiseLoaded(
           contacts: currentState.contacts,
           filteredContacts: filtered,
-          promise: currentState.promise,
         ),
       );
     }
@@ -83,12 +89,12 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
 
     final current = state as PromiseLoaded;
 
-    final updatedPromise = current.promise.copyWith(text: event.text);
+    // final updatedPromise = current.promise.copyWith(text: event.text);
     emit(
       PromiseLoaded(
         contacts: current.contacts,
         filteredContacts: current.filteredContacts,
-        promise: updatedPromise,
+
       ),
     );
   }
@@ -102,10 +108,6 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
       PromiseLoaded(
         contacts: current.contacts,
         filteredContacts: current.filteredContacts,
-        promise: current.promise.copyWith(
-          toName: event.name,
-          toPhone: event.phone,
-        ),
       ),
     );
   }

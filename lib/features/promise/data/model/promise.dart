@@ -1,21 +1,20 @@
 class Promise {
-  final String id;
-  final String text;
-  final String toName;
-  final String toPhone;
-  final DateTime createdAt;
-  final DateTime dueAt;
-
-  final bool isDone;
+   String? id;
+   String? text;
+   String? toName;
+   String? toPhone;
+   DateTime? createdAt;
+   DateTime? dueAt;
+   bool? isDone;
 
   Promise({
-    required this.id,
-    required this.text,
-    required this.toName,
-    required this.toPhone,
-    required this.createdAt,
-    required this.dueAt,
-    required this.isDone,
+     this.id,
+     this.text,
+     this.toName,
+     this.toPhone,
+     this.createdAt,
+     this.dueAt,
+     this.isDone,
   });
   Promise copyWith({
     String? text,

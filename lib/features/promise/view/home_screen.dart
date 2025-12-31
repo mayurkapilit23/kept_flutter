@@ -37,9 +37,9 @@ class _HomeScreenState extends State<HomeScreen> {
       body: IndexedStack(index: _currentIndex, children: _screens),
       bottomNavigationBar: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+          padding: const EdgeInsets.symmetric(horizontal: 100, vertical: 10),
           child: Container(
-            height: 64,
+            height: 58,
             width: MediaQuery.of(context).size.width * 0.50,
             decoration: BoxDecoration(
               color: context.isDark

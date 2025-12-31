@@ -1,7 +1,8 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_bloc.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
@@ -50,6 +51,7 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
           ? AppColors.darkPrimary
           : AppColors.lightPrimary,
       appBar: AppBar(
+        automaticallyImplyLeading: false,
         surfaceTintColor: Colors.transparent,
         backgroundColor: context.isDark
             ? AppColors.darkPrimary
@@ -105,6 +107,9 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
 
                             // Input
                             TextField(
+                              //   onChanged: (value){
+                              // final he=    context.read<PromiseBloc>().promiseModel.text=value;
+                              //   },
                               controller: controller,
                               // autofocus: true,
                               focusNode: _focusNode,
@@ -146,25 +151,28 @@ class _PromiseInputScreenState extends State<PromiseInputScreen> {
                                     onPressed: controller.text.trim().isEmpty
                                         ? null
                                         : () async {
-                                            context.read<PromiseBloc>().add(
-                                              SetPromiseText(
-                                                controller.text
+                                            final promiseText =
+                                                context
+                                                    .read<PromiseBloc>()
+                                                    .promiseModel
+                                                    .text = controller.text
                                                     .toString()
-                                                    .trim(),
+                                                    .trim();
+                                            log(
+                                              'PromiseInputScreen => $promiseText',
+                                            );
+
+                                            context.read<PromiseBloc>().add(
+                                              SetPromiseText(promiseText),
+                                            );
+
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (c) =>
+                                                    SelectPersonScreen(),
                                               ),
                                             );
-
-                                            navigateTo(
-                                              context,
-                                              SelectPersonScreen(),
-                                            );
-
-                                            // Navigator.push(
-                                            //   context,
-                                            //   AppRoute.smooth(
-                                            //     const SelectPersonScreen(),
-                                            //   ),
-                                            // );
                                           },
                                   );
                                 },
