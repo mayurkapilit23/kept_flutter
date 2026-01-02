@@ -3,7 +3,6 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
 import 'package:kept_flutter/features/promise/view/promise_preview_screen.dart';
@@ -82,7 +81,7 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                     color: context.isDark
                         ? AppColors.lightSecondary
                         : AppColors.darkPrimary,
-                    size: 30,
+                    size: 25,
                   ),
                 );
               }

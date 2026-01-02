@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
 
@@ -74,17 +75,15 @@ class CustomButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
     return SizedBox(
       width: _width(context),
       height: _height(context),
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: isDark
+          backgroundColor: context.isDark
               ? AppColors.lightSecondary
               : AppColors.darkPrimary,
-          foregroundColor: isDark ? Colors.black : Colors.white,
+          foregroundColor: context.isDark ? Colors.black : Colors.white,
           padding: _padding(),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),

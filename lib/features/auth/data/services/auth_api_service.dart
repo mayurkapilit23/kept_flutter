@@ -1,9 +1,10 @@
 import 'dart:developer';
 
 import 'package:kept_flutter/features/auth/data/model/login_response.dart';
-import 'package:kept_flutter/features/promise/data/network/dio_client.dart';
 
-class AuthApiServices {
+import '../../../promise/data/services/dio_client.dart';
+
+class AuthApiService {
   Future<Map<String, dynamic>> sendOtp(String phone) async {
     log('From AuthApiServices');
     final response = await DioClient.dio.post(
@@ -16,7 +17,7 @@ class AuthApiServices {
   Future<LoginResponse> verifyOtp({
     required String phone,
     required String otp,
-    required String name
+    required String name,
   }) async {
     final response = await DioClient.dio.post(
       '/auth/verify-otp',

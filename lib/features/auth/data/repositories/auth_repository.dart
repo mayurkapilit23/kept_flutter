@@ -1,12 +1,12 @@
 import 'package:flutter/cupertino.dart';
 import 'package:kept_flutter/features/auth/data/model/login_response.dart';
 import 'package:kept_flutter/features/auth/data/repositories/app_shared_preferences.dart';
-import 'package:kept_flutter/features/auth/data/services/auth_api_services.dart';
+import 'package:kept_flutter/features/auth/data/services/auth_api_service.dart';
 
 import '../model/user.dart';
 
 class AuthRepository {
-  final AuthApiServices service;
+  final AuthApiService service;
 
   final AppSharedPreferences prefs;
 
@@ -55,10 +55,10 @@ class AuthRepository {
   }
 
   Future<bool> isLoggedIn() async {
-    return prefs.token != null;
+    return prefs.getToken() != null;
   }
 
-  LoginResponse? getCachedUser() {
+  Future<LoginResponse?> getCachedUser() {
     return prefs.getUser();
   }
 

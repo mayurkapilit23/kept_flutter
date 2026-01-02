@@ -27,6 +27,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
 
   Future<void> _onSubmitName(SubmitName event, Emitter<AuthState> emit) async {
     emit(AuthLoading());
+    await Future.delayed(Duration(seconds: 1));
     // await repository.saveName(event.name);
     _name = event.name;
     emit(AuthInitial()); //move to mobile input
@@ -74,7 +75,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onCheckStatus(CheckAuth event, Emitter<AuthState> emit) async {
-    final user = repository.getCachedUser();
+    final user = await repository.getCachedUser();
     if (user != null && user.user != null) {
       emit(Authenticated(user.user));
     } else {

@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 class AppColors {
+  AppColors._();
+
   //LightMode Colors
   static const Color lightPrimary = Color(0xfff3f3f2);
   static const Color lightSecondary = Color(0xffffffff);

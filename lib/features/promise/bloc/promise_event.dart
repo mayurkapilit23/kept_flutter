@@ -31,9 +31,10 @@ class SearchContacts extends PromiseEvent {
   List<Object> get props => [query];
 }
 
-class ClearSelectedPerson extends PromiseEvent {  @override
-List<Object> get props => [];}
-
+class ClearSelectedPerson extends PromiseEvent {
+  @override
+  List<Object> get props => [];
+}
 
 class SetPromiseText extends PromiseEvent {
   final String text;
@@ -49,10 +50,28 @@ class SetPerson extends PromiseEvent {
   final String phone;
 
   const SetPerson(this.name, this.phone);
+
+  @override
+  List<Object> get props => [name, phone];
 }
 
 class SetDueDate extends PromiseEvent {
-  final DateTime dueAt;
+  final String dueAt;
 
   const SetDueDate(this.dueAt);
+
+  @override
+  List<Object> get props => [dueAt];
+}
+
+class SubmitPromise extends PromiseEvent {
+  // final String text;
+  // final String toPhone;
+  // final String toName;
+  // final DateTime dueAt;
+  //
+  // const SubmitPromise(this.text, this.toPhone, this.toName, this.dueAt);
+  //
+  // @override
+  // List<Object> get props => [text, toPhone, toName, dueAt];
 }

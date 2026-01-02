@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -20,6 +22,15 @@ class PromisePreviewScreen extends StatefulWidget {
 
 class _PromisePreviewScreenState extends State<PromisePreviewScreen> {
   @override
+  void initState() {
+    final now = DateTime.now();
+    final tomorrow = now.add(const Duration(days: 1));
+    context.read<PromiseBloc>().promiseModel.dueAt =
+        HelperMethods.formateDateDB(tomorrow);
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: context.isDark
@@ -34,7 +45,15 @@ class _PromisePreviewScreenState extends State<PromisePreviewScreen> {
       body: Padding(
         padding: const EdgeInsets.all(24),
         child: BlocConsumer<PromiseBloc, PromiseState>(
-          listener: (context, state) {},
+          listener: (context, state) {
+            if (state is CreatePromiseSuccess) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(builder: (c) => HomeScreen()),
+                (f) => false,
+              );
+            }
+          },
           builder: (context, state) {
             if (state is! PromiseLoaded) {
               return const SizedBox();
@@ -42,7 +61,7 @@ class _PromisePreviewScreenState extends State<PromisePreviewScreen> {
             final promise = context.read<PromiseBloc>().promiseModel;
             // final p = state.promise;
 
-            print('Promise Text ${promise.dueAt}');
+            print('Promise Text ${promise.text}');
             return Column(
               mainAxisAlignment: MainAxisAlignment.center,
               // crossAxisAlignment: CrossAxisAlignment.start,
@@ -71,7 +90,8 @@ class _PromisePreviewScreenState extends State<PromisePreviewScreen> {
                       Text('To ${promise.toName.toString()}'),
                       Text(
                         // '${HelperMethods.formatDate(p.createdAt)} · ${HelperMethods.formatTime(p.createdAt)}',
-                        '${HelperMethods.formatDate(promise.dueAt ?? DateTime.now())} · 6:00 PM (Default Time)',
+                        '${HelperMethods.tomorrowAtSixPM()} ',
+
                         style: const TextStyle(color: Colors.grey),
                       ),
                       SizedBox(height: 50),
@@ -94,16 +114,8 @@ class _PromisePreviewScreenState extends State<PromisePreviewScreen> {
                             width: ButtonWidth.auto,
                             onPressed: () {
                               HapticFeedback.lightImpact();
-                              context.read<PromiseBloc>().promiseModel.text =
-                                  "";
 
-                              Navigator.pushAndRemoveUntil(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => HomeScreen(),
-                                ),
-                                (d) => false,
-                              );
+                              context.read<PromiseBloc>().add(SubmitPromise());
                             },
                           ),
                         ],
@@ -170,10 +182,16 @@ Future<void> showDatePickerDialog(BuildContext context) async {
           selectionMode: DateRangePickerSelectionMode.single,
           showActionButtons: true,
           onSubmit: (value) {
-            final DateTime? selectedDate = value as DateTime?;
-            context.read<PromiseBloc>().promiseModel.dueAt = selectedDate;
-            if (selectedDate != null) {
-              context.read<PromiseBloc>().add(SetDueDate(selectedDate));
+            log("selectedDate $value");
+            // final DateTime? selectedDate = value as DateTime?;
+            context.read<PromiseBloc>().promiseModel.dueAt =
+                HelperMethods.formateDateDB(DateTime.parse(value.toString()));
+            if (value != null) {
+              context.read<PromiseBloc>().add(
+                SetDueDate(
+                  HelperMethods.displayDate(DateTime.parse(value.toString())),
+                ),
+              );
             }
             Navigator.pop(context);
           },

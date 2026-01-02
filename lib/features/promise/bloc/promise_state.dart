@@ -1,8 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_contacts/contact.dart';
 
-import '../data/model/promise.dart';
-
 abstract class PromiseState extends Equatable {
   const PromiseState();
 
@@ -28,6 +26,7 @@ class PromiseTextSet extends PromiseState {
 class PromiseLoaded extends PromiseState {
   final List<Contact> contacts;
   final List<Contact> filteredContacts;
+
   // final Promise promise;
 
   const PromiseLoaded({
@@ -40,14 +39,19 @@ class PromiseLoaded extends PromiseState {
   List<Object> get props => [contacts, filteredContacts];
 }
 
-class NavigateToSelectPerson extends PromiseState {
-
-  const NavigateToSelectPerson();
+class CreatePromiseSuccess extends PromiseState {
+  const CreatePromiseSuccess();
 
   @override
   List<Object?> get props => [];
 }
 
+class NavigateToSelectPerson extends PromiseState {
+  const NavigateToSelectPerson();
+
+  @override
+  List<Object?> get props => [];
+}
 
 class PromiseError extends PromiseState {
   final String message;

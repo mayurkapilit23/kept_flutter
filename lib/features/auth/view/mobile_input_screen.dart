@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/app_route.dart';
 import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_event.dart';
+import 'package:kept_flutter/features/auth/bloc/auth_state.dart';
+import 'package:kept_flutter/features/promise/widgets/custom_button.dart';
 
 import '../../../core/colors/app_colors.dart';
 
@@ -27,134 +26,111 @@ class _MobileInputScreenState extends State<MobileInputScreen> {
     return PopScope(
       canPop: false,
       onPopInvokedWithResult: (result, jghj) {
-       context.read<AuthBloc>().add(GoBackFromMobile());
+        context.read<AuthBloc>().add(GoBackFromMobile());
       },
       child: Scaffold(
         backgroundColor: context.isDark
             ? AppColors.darkSecondary
             : AppColors.lightPrimary,
-        body: SafeArea(
-          child: Center(
-            child: Form(
-              key: _formKey,
-              onChanged: () {
-                setState(() {
-                  isValid = _formKey.currentState!.validate();
-                });
-              },
-              child: SingleChildScrollView(
-                padding: EdgeInsets.all(16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Enter Mobile Number",
-                      style: TextStyle(
-                        color: context.isDark ? Colors.white : Colors.black,
-                        fontSize: 22,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    const SizedBox(height: 10),
-                    const Text(
-                      "We will send an OTP to verify your number.",
-                      style: TextStyle(fontSize: 14, color: Colors.grey),
-                    ),
-                    const SizedBox(height: 25),
-
-                    // PHONE FIELD
-                    TextFormField(
-                      controller: _phoneController,
-                      keyboardType: TextInputType.phone,
-                      maxLength: 10,
-                      autofocus: true,
-
-                      decoration: InputDecoration(
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                          borderSide: BorderSide(
-                            color: context.isDark
-                                ? Colors.white
-                                : Colors.black, // 👈 focus border color
-                            width: 1.2,
-                          ),
-                        ),
-                        counterText: "",
-                        labelText: "Mobile Number",
-                        labelStyle: TextStyle(
-                          color: context.isDark ? Colors.white : Colors.black,
-                        ),
-                        prefixText: "+91 ",
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
-                          return "Mobile number is required";
-                        }
-                        if (value.length != 10) {
-                          return "Enter a valid 10-digit number";
-                        }
-                        if (!RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
-                          return "Enter a valid Indian mobile number";
-                        }
-                        return null;
-                      },
-                    ),
-
-                    const SizedBox(height: 25),
-
-                    // SUBMIT BUTTON
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: isValid
-                              ? Colors.black
-                              : Colors.grey.shade400,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                        ),
-                        onPressed: isValid
-                            ? () {
-                                // Navigator.push(
-                                //   context,
-                                //   MaterialPageRoute(
-                                //     builder: (context) => OtpVerificationScreen(
-                                //       phoneNumber: _phoneController.text,
-                                //     ),
-                                //   ),
-                                // );
-
-                                context.read<AuthBloc>().add(
-                                  SubmitMobile(
-                                    _phoneController.text.toString().trim(),
-                                  ),
-                                );
-
-                                // Navigator.pushNamed(context, AppRoutes.otpScreen);
-                              }
-                            : null,
-                        child: const Text(
-                          "Continue",
+        body: BlocConsumer<AuthBloc, AuthState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            return SafeArea(
+              child: Center(
+                child: Form(
+                  key: _formKey,
+                  onChanged: () {
+                    setState(() {
+                      isValid = _formKey.currentState!.validate();
+                    });
+                  },
+                  child: SingleChildScrollView(
+                    padding: EdgeInsets.all(16),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Enter Mobile Number",
                           style: TextStyle(
-                            fontSize: 16,
+                            color: context.isDark ? Colors.white : Colors.black,
+                            fontSize: 22,
                             fontWeight: FontWeight.w600,
-                            color: Colors.white,
                           ),
                         ),
-                      ),
+                        const SizedBox(height: 10),
+                        const Text(
+                          "We will send an OTP to verify your number.",
+                          style: TextStyle(fontSize: 14, color: Colors.grey),
+                        ),
+                        const SizedBox(height: 25),
+
+                        // PHONE FIELD
+                        TextFormField(
+                          controller: _phoneController,
+                          keyboardType: TextInputType.phone,
+                          maxLength: 10,
+                          autofocus: true,
+
+                          decoration: InputDecoration(
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                color: context.isDark
+                                    ? Colors.white
+                                    : Colors.black, //focus border color
+                                width: 1.2,
+                              ),
+                            ),
+                            counterText: "",
+                            labelText: "Mobile Number",
+                            labelStyle: TextStyle(
+                              color: context.isDark
+                                  ? Colors.white
+                                  : Colors.black,
+                            ),
+                            prefixText: "+91 ",
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return "Mobile number is required";
+                            }
+                            if (value.length != 10) {
+                              return "Enter a valid 10-digit number";
+                            }
+                            if (!RegExp(r'^[6-9]\d{9}$').hasMatch(value)) {
+                              return "Enter a valid Indian mobile number";
+                            }
+                            return null;
+                          },
+                        ),
+
+                        const SizedBox(height: 25),
+
+                        // SUBMIT BUTTON
+                        CustomButton(
+                          title: 'Continue',
+                          onPressed: isValid
+                              ? () {
+                                  context.read<AuthBloc>().add(
+                                    SubmitMobile(
+                                      _phoneController.text.toString().trim(),
+                                    ),
+                                  );
+                                }
+                              : null,
+                        ),
+                      ],
                     ),
-                    // if (state is AuthLoading)
-                    //   Center(child: CircularProgressIndicator()),
-                  ],
+                  ),
                 ),
               ),
-            ),
-          ),
+            );
+          },
         ),
       ),
     );

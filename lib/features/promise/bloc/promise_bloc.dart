@@ -1,22 +1,23 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
-import 'package:uuid/uuid.dart';
 
-import '../data/model/promise.dart';
+import '../data/model/promise_request.dart';
 import '../data/repositories/get_contacts.dart';
 import '../data/repositories/promise_repository.dart';
 
 class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
-  final PromiseRepository storage;
-  final promiseModel = Promise();
+  final PromiseRepository promiseRepo;
+  final promiseModel = PromiseRequest();
 
-  PromiseBloc(this.storage) : super(PromiseInitial()) {
+  PromiseBloc(this.promiseRepo) : super(PromiseInitial()) {
     on<CheckPreviousLoad>(_checkPreviousLoad);
     on<LoadContacts>(_loadContacts);
     on<SearchContacts>(_searchContacts);
     on<SetPromiseText>(_onPromiseText);
     on<SetPerson>(_setPerson);
+    on<SubmitPromise>(_onSubmitPromise);
 
     on<SetDueDate>((event, emit) {
       // final updatedPromise = state.promise.copyWith(
@@ -25,10 +26,10 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
       final current = state as PromiseLoaded;
 
       emit(
-          PromiseLoaded(
-            contacts: current.contacts,
-            filteredContacts: current.filteredContacts,
-          )
+        PromiseLoaded(
+          contacts: current.contacts,
+          filteredContacts: current.filteredContacts,
+        ),
       );
     });
   }
@@ -37,7 +38,7 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     CheckPreviousLoad event,
     Emitter<PromiseState> emit,
   ) async {
-    final alreadyLoaded = await storage.isContactsLoaded();
+    final alreadyLoaded = await promiseRepo.isContactsLoaded();
     if (alreadyLoaded) {
       add(LoadContacts());
     }
@@ -49,14 +50,9 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     emit(PromiseLoading());
     try {
       final contacts = await getContacts();
-      await storage.setContactsLoaded(true);
+      await promiseRepo.setContactsLoaded(true);
 
-      emit(
-        PromiseLoaded(
-          contacts: contacts,
-          filteredContacts: contacts,
-        ),
-      );
+      emit(PromiseLoaded(contacts: contacts, filteredContacts: contacts));
     } catch (e) {
       emit(PromiseError(message: e.toString()));
     }
@@ -94,7 +90,6 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
       PromiseLoaded(
         contacts: current.contacts,
         filteredContacts: current.filteredContacts,
-
       ),
     );
   }
@@ -110,5 +105,31 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
         filteredContacts: current.filteredContacts,
       ),
     );
+  }
+
+  Future<void> _onSubmitPromise(
+    SubmitPromise event,
+    Emitter<PromiseState> emit,
+  ) async {
+    emit(PromiseLoading());
+
+    if (promiseModel.text == null ||
+        promiseModel.toName == null ||
+        promiseModel.toPhone == null ||
+        promiseModel.dueAt == null) {
+      emit(PromiseError(message: "All fields are required"));
+      final test = state is PromiseError;
+      debugPrint('PromiseErrorState => $test');
+    }
+
+    final promiseResponse = await promiseRepo.createPromise(
+      text: promiseModel.text!,
+      toPhone: promiseModel.toPhone!,
+      toName: promiseModel.toName!,
+      dueAt: promiseModel.dueAt.toString(),
+    );
+    emit(CreatePromiseSuccess());
+
+    debugPrint('PromiseCreated with ID : ${promiseResponse.promise?.id}');
   }
 }

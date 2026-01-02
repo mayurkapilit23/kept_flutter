@@ -6,7 +6,7 @@ import 'package:kept_flutter/core/utils/app_light_theme.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_event.dart';
 import 'package:kept_flutter/features/auth/data/repositories/auth_repository.dart';
-import 'package:kept_flutter/features/auth/data/services/auth_api_services.dart';
+import 'package:kept_flutter/features/auth/data/services/auth_api_service.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_bloc.dart';
 import 'package:kept_flutter/features/promise/data/repositories/promise_repository.dart';
 import 'package:kept_flutter/features/theme/bloc/theme_bloc.dart';
@@ -25,8 +25,8 @@ void main() async {
   final promiseRepository = PromiseRepository(prefs);
   //to load first theme
   final initialTheme = await themeRepository.getTheme();
-  final appPrefs = AppSharedPreferences(prefs);
-  final authRepo = AuthRepository(AuthApiServices(), appPrefs);
+  final appPrefs = AppSharedPreferences();
+  final authRepo = AuthRepository(AuthApiService(), appPrefs);
   runApp(
     MultiBlocProvider(
       providers: [

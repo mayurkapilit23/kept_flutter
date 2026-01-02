@@ -2,10 +2,13 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kept_flutter/core/colors/app_colors.dart';
+import 'package:kept_flutter/core/helper_methods/helper_method.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:kept_flutter/features/auth/view/mobile_input_screen.dart';
 import 'package:kept_flutter/features/auth/view/otp_verification_screen.dart';
 import 'package:kept_flutter/features/promise/view/home_screen.dart';
+import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import 'features/auth/bloc/auth_state.dart';
 import 'features/auth/view/name_input_screen.dart';
@@ -81,8 +84,15 @@ class AppRoot extends StatelessWidget {
         }
 
         if (state is AuthLoading) {
-          return const Scaffold(
-            body: Center(child: CircularProgressIndicator()),
+          return Scaffold(
+            body: Center(
+              child: LoadingAnimationWidget.fourRotatingDots(
+                color: context.isDark
+                    ? AppColors.lightSecondary
+                    : AppColors.darkPrimary,
+                size: 25,
+              ),
+            ),
           );
         }
 
@@ -90,7 +100,7 @@ class AppRoot extends StatelessWidget {
           return Scaffold(body: Center(child: Text(state.message)));
         }
 
-        return const SizedBox(child: Text('hello'),);
+        return const SizedBox(child: Text('hello'));
       },
     );
   }
