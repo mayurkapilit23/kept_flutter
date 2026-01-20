@@ -35,7 +35,9 @@ class SubmitOtp extends AuthEvent {
 }
 
 class CheckAuth extends AuthEvent {} // app launch
+
 class GoBackFromMobile extends AuthEvent {} // app launch
+
 class GoBackFromOtp extends AuthEvent {} // app launch
 
 class Logout extends AuthEvent {

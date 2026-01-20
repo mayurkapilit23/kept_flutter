@@ -6,7 +6,6 @@ class AppDarkTheme {
   static ThemeData theme = ThemeData(
     brightness: Brightness.dark,
     scaffoldBackgroundColor: Colors.black,
-    // fontFamily: GoogleFonts.poppins().fontFamily,
     fontFamily: 'poppins',
     bottomSheetTheme: BottomSheetThemeData(
       backgroundColor: AppColors.darkSecondary,
@@ -45,6 +44,7 @@ class AppDarkTheme {
       backgroundColor: Colors.black,
       foregroundColor: Colors.white,
       elevation: 0,
+      surfaceTintColor: Colors.transparent,
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(

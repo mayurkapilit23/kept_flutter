@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:kept_flutter/core/helper_methods/helper_method.dart';
-import 'package:kept_flutter/features/promise/view/promise_input_screen.dart';
-import 'package:kept_flutter/features/promise/view/promise_list_screen.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
+import 'package:kept_flutter/features/promise/views/promise_input_screen.dart';
+import 'package:kept_flutter/features/promise/views/promise_list_screen.dart';
 
 import '../../../core/colors/app_colors.dart';
 import '../widgets/nav_item.dart';

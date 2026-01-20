@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/helper_method.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_bloc.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_event.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_state.dart';

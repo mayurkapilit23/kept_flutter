@@ -3,11 +3,11 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/helper_method.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_bloc.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
-import 'package:kept_flutter/features/promise/view/select_person_screen.dart';
+import 'package:kept_flutter/features/promise/views/select_person_screen.dart';
 import 'package:kept_flutter/features/promise/widgets/custom_button.dart';
 import 'package:lottie/lottie.dart';
 

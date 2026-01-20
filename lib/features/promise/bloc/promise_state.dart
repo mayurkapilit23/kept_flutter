@@ -1,5 +1,8 @@
 import 'package:equatable/equatable.dart';
 import 'package:flutter_contacts/contact.dart';
+import 'package:kept_flutter/core/utils/api_constants.dart';
+import 'package:kept_flutter/features/promise/data/model/promise_response.dart';
+import 'package:kept_flutter/features/promise/data/model/recent_response_model.dart';
 
 abstract class PromiseState extends Equatable {
   const PromiseState();
@@ -24,19 +27,26 @@ class PromiseTextSet extends PromiseState {
 }
 
 class PromiseLoaded extends PromiseState {
-  final List<Contact> contacts;
-  final List<Contact> filteredContacts;
+  final List<Contact> contacts; // all contacts
+  final List<Contact> filteredContacts; // filtered contacts
+  final List<ApiContact> recentContacts; // recent contacts horizontal
 
   // final Promise promise;
 
   const PromiseLoaded({
-    // required this.promise,
     this.contacts = const [],
     this.filteredContacts = const [],
+    this.recentContacts = const [],
   });
 
   @override
-  List<Object> get props => [contacts, filteredContacts];
+  List<Object> get props => [contacts, filteredContacts, recentContacts];
+}
+
+class PromiseListLoaded extends PromiseState {
+  final List<Promise>? promises;
+
+  const PromiseListLoaded(this.promises);
 }
 
 class CreatePromiseSuccess extends PromiseState {
@@ -44,6 +54,12 @@ class CreatePromiseSuccess extends PromiseState {
 
   @override
   List<Object?> get props => [];
+}
+
+class ContactLoaded extends PromiseState {
+  final List<Contact> contacts;
+
+  const ContactLoaded(this.contacts);
 }
 
 class NavigateToSelectPerson extends PromiseState {

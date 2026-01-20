@@ -10,7 +10,7 @@ import 'auth_state.dart';
 class AuthBloc extends Bloc<AuthEvent, AuthState> {
   final AuthRepository repository;
 
-  // 👈 store temporary user input
+  // store temporary user input
   String? _name;
   String? _mobile;
 
@@ -23,9 +23,17 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     on<GoBackFromMobile>(goBackFromMobile);
     on<GoBackFromOtp>(goBackFromOtp);
     // on<Logout>(_onLogout);
+
+    // Initialize auth check
+    add(CheckAuth());
   }
 
   Future<void> _onSubmitName(SubmitName event, Emitter<AuthState> emit) async {
+    if (event.name.trim().isEmpty) {
+      emit(AuthError("Please enter your name"));
+      return;
+    }
+
     emit(AuthLoading());
     await Future.delayed(Duration(seconds: 1));
     // await repository.saveName(event.name);
@@ -41,7 +49,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     debugPrint('From Bloc => authLoading completed');
 
     try {
-      final payload = await repository.sendOtp(event.mobile);
+      final payload = await repository.requestOtp(event.mobile);
 
       final message = payload['message'];
       debugPrint('submitMobile response => $message');
@@ -75,6 +83,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
   }
 
   Future<void> _onCheckStatus(CheckAuth event, Emitter<AuthState> emit) async {
+    emit(AuthLoading());
     final user = await repository.getCachedUser();
     if (user != null && user.user != null) {
       emit(Authenticated(user.user));

@@ -64,6 +64,10 @@ class SetDueDate extends PromiseEvent {
   List<Object> get props => [dueAt];
 }
 
+class FetchPromises extends PromiseEvent {}
+
+class FetchRecentContacts extends PromiseEvent {}
+
 class SubmitPromise extends PromiseEvent {
   // final String text;
   // final String toPhone;

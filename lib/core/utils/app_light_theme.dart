@@ -10,7 +10,6 @@ class AppLightTheme {
       backgroundColor: AppColors.lightSecondary,
     ),
 
-    // fontFamily: GoogleFonts.poppins().fontFamily,
     fontFamily: 'poppins',
 
     textTheme: const TextTheme(
@@ -22,6 +21,7 @@ class AppLightTheme {
       backgroundColor: Colors.white,
       foregroundColor: Colors.black,
       elevation: 0,
+      surfaceTintColor: Colors.transparent,
     ),
 
     elevatedButtonTheme: ElevatedButtonThemeData(

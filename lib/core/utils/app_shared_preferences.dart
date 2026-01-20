@@ -2,7 +2,7 @@ import 'dart:convert';
 
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../model/login_response.dart';
+import '../../features/auth/data/model/login_response.dart';
 
 class AppSharedPreferences {
   static const _tokenKey = 'auth_token';

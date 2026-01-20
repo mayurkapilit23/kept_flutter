@@ -1,14 +1,15 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:kept_flutter/core/utils/api_constants.dart';
 
-import '../../../auth/data/repositories/app_shared_preferences.dart';
+import '../../../../core/utils/app_shared_preferences.dart';
 
 class DioClient {
   static final Dio dio =
       Dio(
           BaseOptions(
-            baseUrl: 'http://192.168.15.187:4000',
+            baseUrl: ApiConstants.baseUrl,
             headers: {'Content-Type': 'application/json'},
           ),
         )

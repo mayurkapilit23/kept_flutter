@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:kept_flutter/features/auth/data/model/login_response.dart';
-import 'package:kept_flutter/features/auth/data/repositories/app_shared_preferences.dart';
+import 'package:kept_flutter/core/utils/app_shared_preferences.dart';
 import 'package:kept_flutter/features/auth/data/services/auth_api_service.dart';
 
 import '../model/user.dart';
@@ -12,9 +12,9 @@ class AuthRepository {
 
   AuthRepository(this.service, this.prefs);
 
-  Future<Map<String, dynamic>> sendOtp(String phone) async {
+  Future<Map<String, dynamic>> requestOtp(String phone) async {
     try {
-      final data = await service.sendOtp(phone);
+      final data = await service.requestOtp(phone);
 
       debugPrint('Repo data => $data');
 

@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_event.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
@@ -18,6 +18,8 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     on<SetPromiseText>(_onPromiseText);
     on<SetPerson>(_setPerson);
     on<SubmitPromise>(_onSubmitPromise);
+    on<FetchPromises>(_onFetchPromises);
+    on<FetchRecentContacts>(_onFetchRecentContacts);
 
     on<SetDueDate>((event, emit) {
       // final updatedPromise = state.promise.copyWith(
@@ -130,6 +132,45 @@ class PromiseBloc extends Bloc<PromiseEvent, PromiseState> {
     );
     emit(CreatePromiseSuccess());
 
-    debugPrint('PromiseCreated with ID : ${promiseResponse.promise?.id}');
+    // debugPrint('PromiseCreated with ID : ${promiseResponse.promises?.}');
+  }
+
+  Future<void> _onFetchPromises(
+    FetchPromises event,
+    Emitter<PromiseState> emit,
+  ) async {
+    emit(PromiseLoading());
+
+    try {
+      final response = await promiseRepo.getPromises();
+
+      final promises = response ?? [];
+
+      emit(PromiseListLoaded(promises));
+    } catch (e) {
+      emit(PromiseError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onFetchRecentContacts(
+    FetchRecentContacts event,
+    Emitter<PromiseState> emit,
+  ) async {
+    final current = state is PromiseLoaded ? state as PromiseLoaded : null;
+
+    try {
+      final response = await promiseRepo.getRecentContact();
+      final recent = response.contacts;
+
+      emit(
+        PromiseLoaded(
+          contacts: current?.contacts ?? [],
+          filteredContacts: current?.filteredContacts ?? [],
+          recentContacts: recent,
+        ),
+      );
+    } catch (e) {
+      emit(PromiseError(message: e.toString()));
+    }
   }
 }

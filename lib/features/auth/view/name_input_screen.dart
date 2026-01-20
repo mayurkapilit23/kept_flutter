@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
 import 'package:kept_flutter/features/promise/widgets/custom_button.dart';
 
 import '../../../core/colors/app_colors.dart';
@@ -34,6 +35,9 @@ class _NameInputScreenState extends State<NameInputScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: context.isDark
+          ? AppColors.darkSecondary
+          : AppColors.lightPrimary,
       body: SafeArea(
         child: Padding(
           padding: const EdgeInsets.all(20),
@@ -65,7 +69,6 @@ class _NameInputScreenState extends State<NameInputScreen> {
                 textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   labelText: 'Full Name',
-                  labelStyle: TextStyle(color: AppColors.darkPrimary),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(12),
                     borderSide: const BorderSide(color: Colors.grey, width: 1),
@@ -89,15 +92,6 @@ class _NameInputScreenState extends State<NameInputScreen> {
                 title: 'Continue',
                 onPressed: _isValid ? _onContinue : null,
               ),
-
-              // SizedBox(
-              //   width: double.infinity,
-              //   height: 48,
-              //   child: ElevatedButton(
-              //     onPressed: _isValid ? _onContinue : null,
-              //     child: const Text('Continue'),
-              //   ),
-              // ),
             ],
           ),
         ),

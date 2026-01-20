@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
-import 'package:kept_flutter/core/helper_methods/helper_method.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
+import 'package:kept_flutter/features/promise/data/model/promise_response.dart';
 
 import '../../../core/colors/app_colors.dart';
 import '../widgets/custom_button.dart';
 
 class PromiseDetailsScreen extends StatelessWidget {
-  const PromiseDetailsScreen({super.key});
+  final Promise promise;
+
+  const PromiseDetailsScreen({super.key, required this.promise});
 
   @override
   Widget build(BuildContext context) {
@@ -37,13 +40,10 @@ class PromiseDetailsScreen extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text('Send ₹5,000', style: TextStyle(fontSize: 28)),
+                  Text(promise.text!, style: TextStyle(fontSize: 28)),
                   const SizedBox(height: 12),
-                  const Text('To Ramesh'),
-                  const Text(
-                    'Today · 6:00 PM',
-                    style: TextStyle(color: Colors.grey),
-                  ),
+                  Text('To ${promise.toPhone}'),
+                  Text(promise.dueAt!, style: TextStyle(color: Colors.grey)),
                 ],
               ),
             ),

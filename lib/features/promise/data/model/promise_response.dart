@@ -1,45 +1,41 @@
 class PromiseResponse {
-  Promise? promise;
+  List<Promise>? promises;
 
-  PromiseResponse({this.promise});
+  PromiseResponse({this.promises});
 
-  PromiseResponse.fromJson(Map<String, dynamic> json) {
-    promise =
-    json['promise'] != null ? new Promise.fromJson(json['promise']) : null;
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    if (this.promise != null) {
-      data['promise'] = this.promise!.toJson();
-    }
-    return data;
+  factory PromiseResponse.fromJson(Map<String, dynamic> json) {
+    return PromiseResponse(
+      promises: json['promises'] != null
+          ? (json['promises'] as List).map((e) => Promise.fromJson(e)).toList()
+          : [],
+    );
   }
 }
 
 class Promise {
   String? id;
   String? fromUserId;
-  Null? toUserId;
+  dynamic toUserId;
   String? toPhone;
   String? text;
   String? dueAt;
   String? status;
   String? createdAt;
-  Null? completedAt;
-  Null? remindedAt;
+  dynamic completedAt;
+  dynamic remindedAt;
 
-  Promise(
-      {this.id,
-        this.fromUserId,
-        this.toUserId,
-        this.toPhone,
-        this.text,
-        this.dueAt,
-        this.status,
-        this.createdAt,
-        this.completedAt,
-        this.remindedAt});
+  Promise({
+    this.id,
+    this.fromUserId,
+    this.toUserId,
+    this.toPhone,
+    this.text,
+    this.dueAt,
+    this.status,
+    this.createdAt,
+    this.completedAt,
+    this.remindedAt,
+  });
 
   Promise.fromJson(Map<String, dynamic> json) {
     id = json['id'];

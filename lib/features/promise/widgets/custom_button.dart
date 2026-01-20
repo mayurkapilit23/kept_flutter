@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:kept_flutter/core/helper_methods/helper_method.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
 
 import '../../../core/colors/app_colors.dart';
 

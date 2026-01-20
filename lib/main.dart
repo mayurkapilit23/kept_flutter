@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/app_root.dart';
+import 'package:kept_flutter/app_gate.dart';
 import 'package:kept_flutter/core/utils/app_dark_theme.dart';
 import 'package:kept_flutter/core/utils/app_light_theme.dart';
 import 'package:kept_flutter/features/auth/bloc/auth_bloc.dart';
@@ -12,7 +12,7 @@ import 'package:kept_flutter/features/promise/data/repositories/promise_reposito
 import 'package:kept_flutter/features/theme/bloc/theme_bloc.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'features/auth/data/repositories/app_shared_preferences.dart';
+import 'core/utils/app_shared_preferences.dart';
 import 'features/theme/data/repositories/theme_repository.dart';
 import 'features/theme/utils/theme_helper.dart';
 
@@ -33,11 +33,10 @@ void main() async {
         BlocProvider<ThemeBloc>(
           create: (_) => ThemeBloc(themeRepository, initialTheme),
         ),
+
+        BlocProvider<AuthBloc>(create: (_) => AuthBloc(authRepo)),
         BlocProvider<PromiseBloc>(
           create: (_) => PromiseBloc(promiseRepository),
-        ),
-        BlocProvider<AuthBloc>(
-          create: (_) => AuthBloc(authRepo)..add(CheckAuth()),
         ),
       ],
       child: const MyApp(),
@@ -66,7 +65,7 @@ class MyApp extends StatelessWidget {
             darkTheme: AppDarkTheme.theme,
             themeMode: themeMode,
             debugShowCheckedModeBanner: false,
-            home: const AppRoot(),
+            home: const AppGate(),
           );
         },
       ),

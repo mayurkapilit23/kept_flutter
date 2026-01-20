@@ -3,9 +3,10 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:kept_flutter/core/helper_methods/helper_method.dart';
+import 'package:kept_flutter/core/helperMethods/helper_method.dart';
 import 'package:kept_flutter/features/promise/bloc/promise_state.dart';
-import 'package:kept_flutter/features/promise/view/promise_preview_screen.dart';
+import 'package:kept_flutter/features/promise/views/promise_preview_screen.dart';
+import 'package:kept_flutter/features/promise/widgets/recent_contact_card.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 
 import '../../../core/colors/app_colors.dart';
@@ -21,12 +22,13 @@ class SelectPersonScreen extends StatefulWidget {
 }
 
 class _SelectPersonScreenState extends State<SelectPersonScreen> {
-  final isRecentContactsAvailable = false;
+  final isRecentContactsAvailable = true;
 
   @override
   void initState() {
-    context.read<PromiseBloc>().add(CheckPreviousLoad());
     super.initState();
+    context.read<PromiseBloc>().add(CheckPreviousLoad());
+    context.read<PromiseBloc>().add(FetchRecentContacts());
   }
 
   @override
@@ -91,6 +93,9 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
               }
 
               if (state is PromiseLoaded) {
+                final recentContacts = state.recentContacts;
+                final allContacts = state.filteredContacts;
+
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -105,41 +110,128 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                     ),
 
                     const SizedBox(height: 20),
-                    isRecentContactsAvailable
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'Recent',
-                                style: TextStyle(fontWeight: FontWeight.w600),
-                              ),
-                              const SizedBox(height: 12),
-                              SizedBox(
-                                height: 70,
-                                child: ListView.separated(
-                                  scrollDirection: Axis.horizontal,
-                                  itemBuilder: (_, i) => CircleAvatar(
-                                    backgroundColor: context.isDark
-                                        ? Colors.white.withOpacity(0.1)
-                                        : Colors.black.withOpacity(0.05),
-                                    radius: 30,
-                                    child: Text(
-                                      ['R', 'A', 'M'][i],
-                                      style: TextStyle(
-                                        color: context.isDark
-                                            ? AppColors.lightSecondary
-                                            : AppColors.darkPrimary,
-                                      ),
-                                    ),
+                    // Horizontal recent contacts
+                    if (recentContacts.isNotEmpty) ...[
+                      SizedBox(
+                        height: 90,
+                        child: ListView.separated(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: recentContacts.length,
+                          separatorBuilder: (_, __) =>
+                              const SizedBox(width: 12),
+                          itemBuilder: (_, i) {
+                            final contact = recentContacts[i];
+                            return RecentContactCard(
+                              name: contact.name,
+                              phone: contact.phone.isNotEmpty
+                                  ? contact.phone
+                                  : '',
+                              onTap: () {
+                                context.read<PromiseBloc>().add(
+                                  SetPerson(
+                                    contact.name,
+                                    contact.phone.isNotEmpty
+                                        ? contact.phone
+                                        : '',
                                   ),
-                                  separatorBuilder: (_, __) =>
-                                      const SizedBox(width: 12),
-                                  itemCount: 3,
-                                ),
-                              ),
-                            ],
-                          )
-                        : SizedBox(),
+                                );
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (_) =>
+                                        const PromisePreviewScreen(),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
+                      ),
+                    ],
+
+                    // Column(
+                    //   crossAxisAlignment: CrossAxisAlignment.start,
+                    //   children: [
+                    //     const Text('Recent', style: TextStyle(fontWeight: FontWeight.w600)),
+                    //     const SizedBox(height: 12),
+                    //
+                    //     SizedBox(
+                    //       height: 70,
+                    //       child: BlocBuilder<ContactBloc, ContactState>(
+                    //         builder: (context, state) {
+                    //           // Loading
+                    //           if (state is ContactLoading) {
+                    //             return const Center(child: CircularProgressIndicator(strokeWidth: 2));
+                    //           }
+                    //
+                    //           // Error
+                    //           if (state is ContactError) {
+                    //             return Center(
+                    //               child: Text(
+                    //                 'Failed to load',
+                    //                 style: TextStyle(
+                    //                   color: context.isDark
+                    //                       ? AppColors.lightSecondary
+                    //                       : AppColors.darkPrimary,
+                    //                 ),
+                    //               ),
+                    //             );
+                    //           }
+                    //
+                    //           // Loaded
+                    //           if (state is ContactLoaded) {
+                    //             final contacts = state.contacts;
+                    //
+                    //             if (contacts.isEmpty) {
+                    //               return const Center(child: Text('No recent contacts'));
+                    //             }
+                    //
+                    //             return ListView.separated(
+                    //               scrollDirection: Axis.horizontal,
+                    //               itemCount: contacts.length,
+                    //               separatorBuilder: (_, __) => const SizedBox(width: 12),
+                    //               itemBuilder: (_, i) {
+                    //                 final contact = contacts[i];
+                    //
+                    //                 // Initial letter
+                    //                 final String initial = contact.name.isNotEmpty
+                    //                     ? contact.name[0].toUpperCase()
+                    //                     : '?';
+                    //
+                    //                 return RecentContactCard(
+                    //                   name: contact.name,
+                    //                   phone: contact.phone,
+                    //                   onTap: () {
+                    //                     final name = context
+                    //                         .read<PromiseBloc>()
+                    //                         .promiseModel
+                    //                         .toName =
+                    //                         contact.name;
+                    //                     final phone = context
+                    //                         .read<PromiseBloc>()
+                    //                         .promiseModel
+                    //                         .toPhone =
+                    //                     contact.phone.isNotEmpty ? contact.phone : '';
+                    //
+                    //                     log('SelectPersonScreen => $name   $phone');
+                    //                     context.read<PromiseBloc>().add(SetPerson(name, phone));
+                    //
+                    //                     Navigator.push(
+                    //                       context,
+                    //                       MaterialPageRoute(builder: (c) => PromisePreviewScreen()),
+                    //                     );
+                    //                   },
+                    //                 );
+                    //               },
+                    //             );
+                    //           }
+                    //
+                    //           return const SizedBox();
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     const SizedBox(height: 20),
                     const Text(
                       'All Contacts',
@@ -152,10 +244,14 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                         // iOS-like smooth
                         cacheExtent: 300,
                         // pre-render offscreen items
-                        itemCount: state.filteredContacts.length,
+                        // itemCount: state.filteredContacts.length,
+                        itemCount: allContacts.length,
                         itemBuilder: (context, index) {
-                          final contact = state.filteredContacts[index];
-
+                          // final contact = state.filteredContacts[index];
+                          final contact = allContacts[index];
+                          final phone = contact.phones.isNotEmpty
+                              ? contact.phones.first.number
+                              : '';
                           return Container(
                             decoration: BoxDecoration(
                               color: context.isDark
@@ -217,10 +313,7 @@ class _SelectPersonScreenState extends State<SelectPersonScreen> {
                                 style: TextStyle(fontSize: 14),
                               ),
                               subtitle: contact.phones.isNotEmpty
-                                  ? Text(
-                                      contact.phones.first.number,
-                                      style: TextStyle(fontSize: 14),
-                                    )
+                                  ? Text(phone, style: TextStyle(fontSize: 14))
                                   : null,
                             ),
                           );
